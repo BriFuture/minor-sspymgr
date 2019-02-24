@@ -1,0 +1,41 @@
+.text-sm {
+    font-size: 16px;
+}
+
+.text-sm span {
+    font-size: 16px;
+}
+
+.text-md {
+    font-size: 20px;
+}
+
+.text-md span {
+    font-size: 20px;
+}
+
+.text-lg {
+    font-size: 24px;
+}
+
+.text-lg span {
+    font-size: 24px;
+}
+
+.dimmer .loader {
+    display: none;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.loader {
+    display: block;
+    position: relative;
+    height: 2.5rem;
+    width: 2.5rem;
+    color: #467fcf;
+}

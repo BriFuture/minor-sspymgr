@@ -1,0 +1,3 @@
+recursive-include sspymgr/vuetemplates *
+recursive-include sspymgr/plugins *
+global-exclude *.pyc

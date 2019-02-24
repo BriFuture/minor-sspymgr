@@ -1,0 +1,24 @@
+{
+    "editor.suggest.filterGraceful": false,
+    "javascript.validate.enable": false,
+    "css.validate": false,
+    "html.autoClosingTags": true,
+    "html.validate.scripts": false,
+    "files.associations": {
+        "*.html": "jinja-html"
+    },
+    "python.linting.pylintEnabled": false,
+    "python.jediEnabled": false,
+    "python.pythonPath": "venv\\Scripts\\python.exe",
+    "python.venvPath": "${workspaceFolder}/venv",
+    "[html]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2
+    },
+    "[jinja-html]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2
+    },
+    "git.ignoreLimitWarning": true,
+    "python.formatting.provider": "yapf"
+}

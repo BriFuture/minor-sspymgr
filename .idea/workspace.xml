@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ef63d9ab-1291-400f-880c-3af888391ba1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/frontend/src/home/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/home/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/home/Index.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/home/ResetPassword.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/home/Signin.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/home/Signup.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/home/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/home/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/account/accountFlow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/account/db/account.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/account/db/accountFlow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/account/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/account_checker/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/alipay/db/alipay.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/alipay/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/menu/addPort.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/menu/addServer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/menu/flow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/menu/listPort.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/menu/listServer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/menu/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/screenshot/cli01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/cli/screenshot/cli02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/email/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/email/blackList.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/email/db/email.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/email/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/db/saveFlow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/db/saveFlow5min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/db/saveFlowDay.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/db/saveFlowHour.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/db/server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/flow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/flowChildProcess.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/generateFlow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/flowSaver/server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccount/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccount/db/freeAccount.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccount/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccount/libs/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccount/libs/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccount/libs/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccount/libs/qrcode.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccount/views/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccountMiner/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccountMiner/db/port.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccountMiner/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccountMiner/libs/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccountMiner/libs/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccountMiner/libs/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/freeAccountMiner/libs/qrcode.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/giftcard/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/giftcard/db/giftcard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/giftcard/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/group/db/group.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/group/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/macAccount/db/macAccount.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/macAccount/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/paypal/db/paypal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/paypal/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/auth.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/db/flow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/db/server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/db/telegram.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/flow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/flowSaver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/help.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/managerAddress.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/port.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/screenshot/telegram01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/screenshot/telegram02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/telegram/serverManager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/user/db/user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/user/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/db/notice.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/db/push.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/db/setting.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/dependence.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/Chart.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/MaterialIcons-Regular.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/MaterialIcons-Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/MaterialIcons-Regular.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/MaterialIcons-Regular.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-animate.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-animate.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-aria.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-aria.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-chart.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-chart.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-inview.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-marked.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-material.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-material.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-messages.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-messages.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-moment.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-moment.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-qr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-sanitize.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-sanitize.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-translate.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-ui-router.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-websocket.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular-websocket.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/angular.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/bundle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/clipboard.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/favicon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/forkme_right_white_ffffff.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/jquery.min.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/lib.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/marked.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/moment.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/ngStorage.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/ngclipboard.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/qrcode.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/libs/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/configs/auth.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/configs/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/configs/sceProvider.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/configs/themingProvider.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/configs/urlRouter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/admin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/adminAccount.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/adminGiftCard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/adminGroup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/adminNotice.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/adminOrder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/adminServer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/adminSetting.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/adminUser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/home.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/controllers/user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/account.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/addAccount.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/addGiftCardBatch.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/alert.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/ban.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/changePassword.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/confirm.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/editUserComment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/email.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/ip.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/language.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/markdown.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/order.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/pay.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/payByGiftCard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/qrcode.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/serverChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/setEmail.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/setUserGroup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/subscribe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/dialogs/user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/directives/focusMe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/filters/ban.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/filters/flow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/filters/giftcard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/filters/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/filters/mac.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/filters/orderStatus.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/filters/substr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/filters/time.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/routes/admin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/routes/adminAccount.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/routes/adminServer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/routes/adminSetting.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/routes/adminUser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/routes/home.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/routes/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/routes/user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/services/adminService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/services/configService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/services/homeService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/services/preloadService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/services/userService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/services/websocketService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/translate/en-US.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/translate/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/translate/ja-JP.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/translate/ru-RU.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/translate/zh-CN.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/account.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/accountPage.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/accountSetting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/accountSortAndFilterDialog.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/addAccount.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/addGroup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/addRefUser.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/addServer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/addUser.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/admin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/adminPage.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/baseSetting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/changePassword.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/editAccount.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/editGroup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/editNotice.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/editOrder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/editPayment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/editRefCode.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/editServer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/giftcardBatchDetails.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/giftcardBatchList.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/groupList.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/mailSetting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/myRefCode.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/newNotice.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/newOrder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/notice.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/orderFilterDialog.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/orderSetting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/pay.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/paymentList.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/pickAccount.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/pickTime.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/previewNotice.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/refCodeList.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/refSetting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/refUserList.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/server.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/serverPage.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/setExpireTime.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/settings.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/telegramSetting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/unfinished.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/user.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/userPage.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/admin/userSortDialog.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/addAccount.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/addGiftCardBatch.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/alert.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/ban.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/changePassword.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/confirm.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/editUserComment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/email.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/ip.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/language.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/order.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/pay.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/payByGiftCard.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/serverChart.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/setEmail.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/setUserGroup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/dialog/subscribe.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/home.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/macLogin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/ref.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/refInput.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/resetPassword.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/signup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/home/telegramLogin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/bing.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/default.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_bing.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/assets/default_100_percent/100-disabled.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/assets/default_100_percent/100-error-offline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/assets/default_100_percent/100-offline-sprite.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/assets/default_200_percent/200-disabled.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/assets/default_200_percent/200-error-offline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/assets/default_200_percent/200-offline-sprite.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/assets/offline-sprite-1x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/assets/offline-sprite-2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_dinosaur/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_sample.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_zelda.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/skin/fs_zelda/zelda.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/account.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/changePassword.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/order.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/qrcodeDialog.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/ref.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/settings.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/telegram.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/public/views/user/user.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/screenshot/01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/screenshot/02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/screenshot/03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/screenshot/04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/screenshot/05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/admin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminAccount.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminFlow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminGiftCard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminGroup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminNotice.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminOrder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminServer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminSetting.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/adminUser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/home.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/push.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/route.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/server/user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/views/error.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/views/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/views/manifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui/views/serviceworker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_autoban/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_autoban/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_order/db/webgui_flow_pack.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_order/db/webgui_order.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_order/flowPack.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_order/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_ref/admin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_ref/db/webgui_ref.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_ref/db/webgui_ref_code.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_ref/db/webgui_ref_time.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_ref/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_ref/order.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_ref/time.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_ref/user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_telegram/account.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_telegram/admin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_telegram/db/webgui_telegram.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_telegram/flow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_telegram/help.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_telegram/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref_plugins/webgui_telegram/user.js" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="266" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="minor-sspy-mgr" type="b2602c69:ProjectViewProjectNode" />
+              <item name="minor-sspy-mgr" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../python-ml" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ef63d9ab-1291-400f-880c-3af888391ba1" name="Default Changelist" comment="" />
+      <created>1545732832676</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1545732832676</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17913593" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.329718" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+</project>
