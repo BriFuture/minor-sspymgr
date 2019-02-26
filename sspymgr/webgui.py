@@ -24,11 +24,14 @@ def init_routes(app):
     initEmail(api)
     app.register_blueprint( api, url_prefix='/api')
 
+import threading
+def run_threaded(job_func):
+    job_thread = threading.Thread(target=job_func)
+    job_thread.start()
 
 def on_taskSchedule(schedule):
     controller.start()
-    schedule.every().seconds.do(controller.execute)
-    schedule.every().seconds.do(emailManager.checkRemain)
+    schedule.every().seconds.do(run_threaded, emailManager.checkRemain)
 
 
 from flask import Flask

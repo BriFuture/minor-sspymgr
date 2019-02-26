@@ -42,9 +42,17 @@ class BackTask(object):
         import time
         self.events.trigger("task_schedule", schedule)
         logger.info( 'start background tasks....' )
-
+        count = 0
         while True:
-            schedule.run_pending()
+            # schedule.run_pending()
+            try:
+                schedule.run_pending()
+            except Exception as e:
+                logger.warn("Schedule running: {}".format(e))
+            count += 1
+            if count == 3600:
+                logger.debug("One Hour Pass.")
+                count = 0
             time.sleep( 1 )
 
 
@@ -75,6 +83,7 @@ def load_plugins(app):
     logger.info("开始过滤插件。")
     plugin_module = []
     no_dependences = []
+    plugin_file_names = [plugin_file.stem for plugin_file in plugins]
     for plugin_file in plugins:
         try:
             name = plugin_file.stem
@@ -87,17 +96,18 @@ def load_plugins(app):
             else:
                 pm = importlib.import_module(name)
             pm.name = name
-            logger.debug("导入插件 {}".format(pm))
 
             if(not hasattr(pm, 'requirement') or len(pm.requirement) == 0):
+                logger.debug("导入无依赖插件 {}".format(pm))
                 no_dependences.append(pm)
             else:
                 meet = True
                 for r in pm.requirement:
-                    if r not in plugins:
+                    if r not in plugin_file_names:
                         meet = False
                 if meet:
                     plugin_module.append(pm)
+                    logger.debug("导入有依赖插件 {}".format(pm))
         except Exception as exc:
             logger.warn("Load plugin `{}` Error: {}".format(plugin_file, exc))
     plugins.clear()
@@ -110,7 +120,6 @@ def load_plugins(app):
     app.m_plugins = []
     num_loaded = 0
     level_loaded = 0
-    test = 0
     while(num_loaded < num_all_plugins and level_loaded < 3):
         num_loaded += __do_load_plugin(app, plugin_module, no_dependences)
         level_loaded += 1

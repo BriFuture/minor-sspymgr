@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.0.16
+
+1. fix bugs when sscontroller.adapter socket recv datas, it will block and backend tasks will never be executed any more.
+2. update plugin system and fixed plugin loading problem
 
 ## v0.0.14
 

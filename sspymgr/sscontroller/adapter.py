@@ -30,7 +30,7 @@ class SSProtocol( object ):
 # STAT = re.compile( b'stat: {[^s]+}' )
 import json
 from queue import Queue
-
+from time import sleep
 
 class SSAdapter( object ):
     """contains two queues, one of which contains commands to be sent,
@@ -60,10 +60,10 @@ class SSAdapter( object ):
         else:
             self._socket = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )  ## UDP connection
 
-        self._socket.connect( server )
         # self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._socket.settimeout( 0.1 )  # never timeout
-        self._socket.setblocking( True ) # block
+        self._socket.settimeout( 0 )  # timeout
+        self._socket.setblocking( False ) # block
+        self._socket.connect( server )
         self.ping()
 
 
@@ -77,7 +77,7 @@ class SSAdapter( object ):
         self.accounts[ port ] = { 'flow': 0, 'status': 'created' }
 
         cmd = self.protocol.add_port(port, password, method)
-        # logger.debug("add port: {}".format(cmd))
+        logger.debug("port is adding : {}".format(cmd))
         self.queue.put( cmd )
     
     def remove_port( self, port: int ):
@@ -85,7 +85,7 @@ class SSAdapter( object ):
             return
         self.accounts[ port ] = { 'flow': 0, 'status': 'removing' }
         cmd = self.protocol.remove_port(port)
-        # self.accounts.pop( port ) 
+        logger.debug("port is removing : {}".format(cmd))
         self.queue.put( cmd )
     
     def update_port( self, port: int, password: str, method = DEFAULT_METHOD):
@@ -101,19 +101,23 @@ class SSAdapter( object ):
             cmd = self.queue.get()
             # logger.debug("sending: {}".format(cmd))
             self._socket.send( cmd[0] )
+            sleep(0.005)
         try:
             rmsg = self._socket.recv( 2048 )
+            print(rmsg, cmd)
             self._processResponse(rmsg, cmd)
         except Exception as exc:
-            logger.warn("cmd: {}".format(exc) )
-            pass
+            if type(exc) != BlockingIOError:
+                logger.warn("cmd executing error: {}".format(exc) )
+            
 
         self.stat_count += 1
 
         if( self.stat_count == 60 ):
             """avoid long time not recved stats information
             """
-            self.ping()
+            # self.ping()
+            logger.debug("SSServer not response for a long time")
             self.stater( self.accounts, force=True )
             self.stat_count = 0
 

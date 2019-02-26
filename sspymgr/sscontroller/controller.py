@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from .database import db, Account, AccountFlow
 from .utils import logger, ssAddr
 from .adapter import SSAdapter
+import threading
+from time import sleep
 
 class SSController(object):
     """Account: created -> added -> invalid -> removed
@@ -24,6 +26,9 @@ class SSController(object):
             print( exc )
         self._adapter = adapter
         self.__load_accounts_fromdb()
+        job_thread = threading.Thread(target = self.execute)
+        job_thread.start()
+
 
     def setStats(self, stats):
         self.stats = stats
@@ -48,7 +53,11 @@ class SSController(object):
                 if p == flow.port:
                     acc._flow = flow
                     break
-            logger.debug("process stats: {}".format(accounts[p]))
+            # some accounts in database may not exists in accounts
+            if p not in accounts:
+                continue
+
+            logger.debug("process stats for {}: {}".format(p, accounts[p]))
             if p in accounts.keys() and accounts[p]['flow'] != 0:
                 acc._flow.updateTime = datetime.now()
                 acc._flow.flow += accounts[p]['flow']
@@ -59,6 +68,7 @@ class SSController(object):
                 acc._flow.flow = 0
                 self._adapter.remove_port(p)
                 acc.status = 'removed'
+                logger.debug("account (port {}) is not valid any more, removing".format(acc.port))
             else:
                 if acc.status == 'removed':
                     self._adapter.add_port(p, acc.password)
@@ -83,6 +93,7 @@ class SSController(object):
                     acc.status = 'added'
             elif acc.status == 'added':
                 self._adapter.add_port(acc.port, acc.password)
+        db.session.commit()
 
     def add_account(self, port, password, **kwargs):
         """
@@ -193,7 +204,9 @@ class SSController(object):
     def execute(self):
         """send command and recieve message
         """
-        self._adapter.execute()
+        while 1:
+            self._adapter.execute()
+            sleep(1)
 
     def list_account(self, atype='all'):
         """

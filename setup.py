@@ -12,7 +12,7 @@ with open('requirements.txt', "r", encoding="utf-8") as f:
 setup( 
     name = "sspymgr", 
     packages = find_packages(where='.'), 
-    version = "0.0.15",
+    version = "0.0.16",
 
     entry_points = {
         "console_scripts": [

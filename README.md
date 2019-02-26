@@ -28,6 +28,8 @@ You may find some useful instructions in [addition.doc](./docs/addition.md). Or 
 
 ## TODO List
 
+- database
+    * database lazy loading and creation, command line arguments option add `-c` or `--config` to set config file
 - admin
     * setting subsystem optimizing
     * order subsystem details for confirm

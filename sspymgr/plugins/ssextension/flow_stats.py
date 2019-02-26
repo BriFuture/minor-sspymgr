@@ -98,7 +98,7 @@ class FlowRecordDay(db.Model):
         record = FlowRecordDay(port=port, flow=flow, date=date, day=time.day)
         db.session.add(record)
 
-from .utils import logger
+from . import logger
 class FlowStats(object):
     """统计流量，将流量记录到数据库中
     """
@@ -181,7 +181,8 @@ def checkAllAccounts():
                 sendLastDay(acc)
         else:
             user.type = UserType.INVALID.value
-            db.session.commit()
+        
+        db.session.commit()
     
 
 def sendLastDay(acc: Account, user: User):
