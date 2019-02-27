@@ -60,7 +60,7 @@ class EmailManager(object):
             sys.exit( 1 )
         if( self._host == None ) :
             raise ValueError
-
+        self._process_pending = False
         self._sendQueue = Queue()
 
     def add_email(self, to, subject = None, content = None, type = None ):
@@ -73,14 +73,27 @@ class EmailManager(object):
         # db.session.add(email)
         self._sendQueue.put(email)
     
-    def send(self, email):
+    def send(self, email: Email):
         self._sendQueue.put(email)
 
     def checkRemain(self):
         if self._sendQueue.empty():
+            self.checkPending()
             return
         email = self._sendQueue.get()
+        self.__send(email, commit=True)
 
+    def checkPending(self):
+        if self._process_pending == True:
+            return
+        self._process_pending = True
+        emails = Email.query.filter_by(remark='pending').all()
+        for e in emails:
+            self.__send(e)
+        self.db.session.commit()
+        self._process_pending = False
+
+    def __send(self, email: Email, commit = False):
         self.db.session.add(email)
         logger.debug("Geting email and ready to send it")
         if self._test:
@@ -91,8 +104,8 @@ class EmailManager(object):
             ms.send(email)
             email.remark = "sent"
             logger.debug("Email generated and send: {}".format(email))
-        
-        self.db.session.commit()
+        if commit:
+            self.db.session.commit()
 
 class MailSender(object):
     def __init__(self, host, account, password, port, *args, **kwargs):

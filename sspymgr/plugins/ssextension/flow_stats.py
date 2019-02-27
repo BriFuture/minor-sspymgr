@@ -112,16 +112,17 @@ class FlowStats(object):
                 self.min[port] = detail['flow']
             else:
                 self.min[port] = self.min[port] + detail['flow']
-        # logger.debug("5 min: {}".format(self.min))
         for port in self.min:
             if port not in self.day:
                 self.day[port] = self.min[port]
             else:
                 self.day[port] += self.min[port]
 
+        logger.debug("5 min: {}".format(self.min))
+
     def record5minToDb(self):
         now = datetime.now()
-        cond = (now.minute - 1) % self.MINUTE
+        cond = (now.minute + 1) % self.MINUTE
         if( cond != 0 ):
             return
         gen = 0
@@ -129,7 +130,7 @@ class FlowStats(object):
             if self.min[port] == 0:
                 # no need to record
                 continue
-            self.genMinRecord(self.db, port, self.min[port], datetime.now())
+            self.genMinRecord(port, self.min[port], now)
             self.min[port] = 0
             gen += 1
         logger.debug("5 min record to db count: {}".format(gen))
@@ -143,7 +144,7 @@ class FlowStats(object):
         for port in self.day:
             if self.day[port] == 0:
                 continue
-            self.genDayRecord(self.db, port, self.day[port], datetime.now())
+            self.genDayRecord(port, self.day[port], datetime.now())
             self.day[port] = 0
             gen += 1
         logger.debug("day record to db count: {}".format(gen))
@@ -190,23 +191,25 @@ class AccountsChecker(object):
             now = datetime.now()
             if now < acc.expire: 
                 if self.canSendLastDay(user) and (acc.expire - now) < timedelta(days=1):
-                    self.sendLastDay(acc, self.app.m_emailManager)
+                    self.sendLastDay(acc, user)
             else:
                 user.type = UserType.INVALID.value
             
         self.app.m_db.session.commit()
         
     # from 
-    def sendLastDay(self, acc: Account, user: User, emailManager):
+    def sendLastDay(self, acc: Account, user: User):
         logger.debug("<{} : {}> will expire soon".format(user.email, user.comment))
 
-        content = """Hi, your account of SSPY-MGR will be expired within one day (at {}).<br />
-        Please go to {} to rechart Your account.(Your ss account Port: {})
+        # content = """Hi, your account of SSPYMGR will be expired within one day (at {}).<br />
+        # Please go to {} to rechart Your account.(Your ss account Port: {})
+        # """.format(formatTime(acc.expire), acc.server, acc.port)
+        content = """你好, 你的 SSPYMGR 账户将会在一天后过期 (即 {}).<br />
+        请访问 {} 以重新激活你的账户.(你的 shadowsocks 账号端口是: {})
         """.format(formatTime(acc.expire), acc.server, acc.port)
         user.type = UserType.NOTIFIED.value
         subject = "账户过期提醒"
-        pass
-        emailManager.add_email(
+        self.app.m_emailManager.add_email(
             to=user.email,
             subject=subject,
             content=content,

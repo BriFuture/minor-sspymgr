@@ -2,7 +2,7 @@
 
 from sspymgr import createLogger
 logger = createLogger(
-    "plugin_sscontroller", stream=True, logger_prefix="[Plugin sscontroller]")
+    "plugin_sscontroller", stream=False, logger_prefix="[Plugin sscontroller]")
 from sspymgr import getRandomCode
 from datetime import datetime, timedelta
 
@@ -19,6 +19,7 @@ def run_threaded(job_func):
 def scheduleTasks(schedule):
     recorder = FlowStats(app.m_db)
     app.m_sscontroller.setStats(recorder.recordFlow)
+    # schedule.every(10).seconds.do(run_threaded, recorder.record5minToDb)
     schedule.every().minute.at(":57").do(run_threaded, recorder.record5minToDb)
     schedule.every().day.at("23:59").do(run_threaded,  recorder.record1dayToDb)
     accChecker = AccountsChecker(app)
