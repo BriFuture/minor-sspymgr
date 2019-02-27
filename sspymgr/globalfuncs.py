@@ -1,7 +1,13 @@
 import hashlib, random, string
 code_lib = string.ascii_letters + string.digits
 
-def getRandomCode( bit = 6 ):
+import re
+EMAIL_REGEX = re.compile(r'[^@]+@[^@]+\.[^@]+')
+
+def isEmailMatched(email: str) -> bool:
+    return EMAIL_REGEX.match(email)
+
+def getRandomCode( bit = 6 ) -> str:
     return ''.join( random.SystemRandom().choices( code_lib, k = bit ) )
 
 def convertFlowToByte( flow: int, unit: string ):

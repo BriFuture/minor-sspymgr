@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from .models import db
+from .models import DB
 from datetime import datetime
 
-class Email( db.Model ):
+class Email( DB.Model ):
     __tablename__ = 'email'
-    id = db.Column( db.Integer, primary_key = True, autoincrement = True )
-    to = db.Column( db.String( 255 ), nullable=False )
-    content = db.Column( db.Text )
-    time = db.Column( db.DateTime, default=datetime.now )
-    subject = db.Column( db.String( 255 ) )
-    ip = db.Column( db.String( 255 ) )
-    type = db.Column( db.String( 255 ) )
-    remark = db.Column( db.String( 255 ) )
-    session = db.Column( db.String( 255 ) )
+    id = DB.Column( DB.Integer, primary_key = True, autoincrement = True )
+    to = DB.Column( DB.String( 255 ), nullable=False )
+    content = DB.Column( DB.Text )
+    time = DB.Column( DB.DateTime, default=datetime.now )
+    subject = DB.Column( DB.String( 255 ) )
+    ip = DB.Column( DB.String( 255 ) )
+    type = DB.Column( DB.String( 255 ) )
+    remark = DB.Column( DB.String( 255 ) )
+    session = DB.Column( DB.String( 255 ) )
 
     def to_dict(self):
         di = {
@@ -42,12 +42,13 @@ from email.mime.text import MIMEText
 from email.utils import parseaddr, formataddr
 
 from .path_helper import createLogger
-logger = createLogger('email')
+logger = createLogger('email', stream=False)
 
 class EmailManager(object):
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config, database, *args, **kwargs):
         # self.config = config
         _email = config.email
+        self.db = database
         self._test = config.debug
         self._host     = _email[ 'host' ]
         self._account  = _email[ 'account' ]
@@ -69,27 +70,29 @@ class EmailManager(object):
             content=content,
             type=type,
             remark="pending")
-        db.session.add(email)
+        # db.session.add(email)
         self._sendQueue.put(email)
     
     def send(self, email):
         self._sendQueue.put(email)
 
     def checkRemain(self):
-
         if self._sendQueue.empty():
             return
         email = self._sendQueue.get()
-        db.session.add(email)
+
+        self.db.session.add(email)
+        logger.debug("Geting email and ready to send it")
         if self._test:
             email.remark = "debugNotSend"
-            logger.debug("[Email] Email generated but not send: {}".format(email))
+            logger.info("Email generated but not send: {}".format(email))
         else:
             ms = MailSender(self._host, self._account, self._password, self._port)
             ms.send(email)
             email.remark = "sent"
+            logger.debug("Email generated and send: {}".format(email))
         
-        db.session.commit()
+        self.db.session.commit()
 
 class MailSender(object):
     def __init__(self, host, account, password, port, *args, **kwargs):
@@ -116,6 +119,7 @@ class MailSender(object):
         name, addr = parseaddr(s)
         return formataddr( ( Header(name, 'utf-8').encode(), addr ) )
 
+
 def registerApi(api):
     from flask import jsonify 
     @api.route_admin('/email/getAll', methods=['GET', 'POST'])
@@ -129,4 +133,8 @@ def registerApi(api):
         page, per_page = api.getPageArgs()
         emails = Email.query.paginate(page=page, per_page=per_page)
         return jsonify({'status': 'success', 'emails': emails})
-        
+    logger.info("Api registered")
+
+
+def init(app):
+    app.m_events.on("beforeRegisterApi", registerApi)

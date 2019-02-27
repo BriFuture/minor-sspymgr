@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from sspymgr import db, createLogger
+from sspymgr import DB, createLogger
 from sqlalchemy.sql import text
 from base64 import b64decode
 
 logger = createLogger('plugin_settings', stream=False, logger_prefix="[Plugin Settings]")
 
-class WebguiSetting( db.Model ):
+db = None
+class WebguiSetting( DB.Model ):
     """
     Type (can be ignored, just used as utility):
         String: Value type by default, should be processed by other logic
@@ -16,10 +17,10 @@ class WebguiSetting( db.Model ):
         Hidden: Not visible for even manager
     """
     __tablename__ = 'webguiSetting'
-    id = db.Column( db.Integer, primary_key = True, autoincrement = True )
-    key = db.Column( db.String( 255 ), unique = True )
-    value = db.Column( db.Text )
-    type = db.Column( db.String( 32 ), default = 'String' )
+    id = DB.Column( DB.Integer, primary_key = True, autoincrement = True )
+    key = DB.Column( DB.String( 255 ), unique = True )
+    value = DB.Column( DB.Text )
+    type = DB.Column( DB.String( 32 ), default = 'String' )
 
     def getTypedValue( self ):
         if not self.type:
@@ -32,12 +33,7 @@ class WebguiSetting( db.Model ):
             except Exception:
                 return float( self.value )
         return self.value
-    
-    @staticmethod
-    def count():
-        sql = 'SELECT count(*) FROM %s' % WebguiSetting.__tablename__
-        res = db.engine.execute( text( sql ) ).first()
-        return res[ 0 ]
+            
 
     @staticmethod
     def getSetting(key, default_value=None, default_type="String"):
@@ -57,7 +53,7 @@ class WebguiSetting( db.Model ):
         }
         return di
 
-def init_webgui_setting():
+def __init_webgui_setting(db):
     """
     alipay_enabled: bool default false
     wechatpay_enabled: bool default false
@@ -68,7 +64,9 @@ def init_webgui_setting():
     signup_email_limit: int  default 2
     shadowsock_port_range_start: Number default '50000'
     """
-    if WebguiSetting.count() != 0:
+    sql = 'SELECT count(*) FROM %s' % WebguiSetting.__tablename__
+    res = db.engine.execute( text( sql ) ).first()
+    if res[ 0 ] != 0:
         return
     settings = [
         ( "alipay_enabled",    "0", "Boolean" ),
@@ -86,7 +84,9 @@ def init_webgui_setting():
 
 def init(app):
     app.m_events.on('beforeRegisterApi', registerApi)
-    init_webgui_setting()
+    global db
+    db = app.m_db
+    __init_webgui_setting(db)
     logger.debug("inited")
 
 from flask import jsonify

@@ -1,32 +1,32 @@
 # -*- coding: utf-8 -*-
 
-from sspymgr.models import db
+from sspymgr.models import DB
 from datetime import datetime, timedelta
 
 
-class Account(db.Model):
+class Account(DB.Model):
     """
     Represents shadowsocks server account, port and password can not be None
     """
     __tablename__ = 'account'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     # corresponding with Table User, but can be created by manager
-    userId = db.Column(db.Integer, unique=True)  
-    data = db.Column(db.String(255))
-    port = db.Column(db.Integer, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    totalFlow = db.Column(db.BigInteger)
-    expire = db.Column(db.DateTime)
-    server = db.Column(db.String(255))
-    method = db.Column(db.String(64), default='aes-256-cfb')
-    # server = db.Column( db.String( 255 ) )  # no need for multi server now
+    userId = DB.Column(DB.Integer, unique=True)  
+    data = DB.Column(DB.String(255))
+    port = DB.Column(DB.Integer, nullable=False)
+    password = DB.Column(DB.String(255), nullable=False)
+    totalFlow = DB.Column(DB.BigInteger)
+    expire = DB.Column(DB.DateTime)
+    server = DB.Column(DB.String(255))
+    method = DB.Column(DB.String(64), default='aes-256-cfb')
+    # server = DB.Column( DB.String( 255 ) )  # no need for multi server now
     """
     @field type
         0 registered by email and have a 
     """
-    type = db.Column(db.Integer)
-    status = db.Column(db.String(32))
-    createTime = db.Column(db.DateTime, default=datetime.now())
+    type = DB.Column(DB.Integer)
+    status = DB.Column(DB.String(32))
+    createTime = DB.Column(DB.DateTime, default=datetime.now())
 
     def __init__(self, **kwargs):
         super(Account, self).__init__(**kwargs)
@@ -49,7 +49,6 @@ class Account(db.Model):
     def clear_flow(self):
         self._accountFlow.flow = 0
         self._flow.flow = 0
-        db.session.commit()
 
     def get_used_flow(self):
         if hasattr(self, '_flow'):
@@ -78,20 +77,20 @@ class Account(db.Model):
         return di
 
 
-class AccountFlow(db.Model):
+class AccountFlow(DB.Model):
     __tablename__ = 'accountFlow'
 
-    port = db.Column(db.Integer, primary_key=True)
-    flow = db.Column(db.BigInteger, default=0)  # flow used
-    status = db.Column(db.String(255), default='checked')
-    accountId = db.Column(db.Integer, unique=True)
-    updateTime = db.Column(
-        db.DateTime, default=datetime.now)  # means the account last connected
-    autoBanTime = db.Column(db.DateTime)
+    port = DB.Column(DB.Integer, primary_key=True)
+    flow = DB.Column(DB.BigInteger, default=0)  # flow used
+    status = DB.Column(DB.String(255), default='checked')
+    accountId = DB.Column(DB.Integer, unique=True)
+    updateTime = DB.Column(
+        DB.DateTime, default=datetime.now)  # means the account last connected
+    autoBanTime = DB.Column(DB.DateTime)
 
-    # serverId  = db.Column( db.Integer )
-    checkTime = db.Column(db.DateTime)
-    nextCheckTime = db.Column(db.DateTime)
+    # serverId  = DB.Column( DB.Integer )
+    checkTime = DB.Column(DB.DateTime)
+    nextCheckTime = DB.Column(DB.DateTime)
 
     def consume_flow(self, flow: int):
         self.flow += flow
@@ -114,9 +113,9 @@ class AccountFlow(db.Model):
         return di
 
 
-class Command(db.Model):
+class Command(DB.Model):
     __tablename__ = 'command'
-    id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(255))
-    time = db.Column(db.String(255))
+    id = DB.Column(DB.Integer, primary_key=True)
+    code = DB.Column(DB.String(255))
+    time = DB.Column(DB.String(255))
 

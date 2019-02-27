@@ -5,10 +5,11 @@
 """
 
 __author__ = 'BriFuture'
-__version__ = '0.0.16'
+__version__ = '0.0.17'
 
+from .manager import Manager
 # models
-from .models import db
+from .models import DB
 
 from .path_helper import createLogger, createLoggerFile
-from .globalfuncs import getRandomCode, convertFlowToByte, formatTime
+from .globalfuncs import isEmailMatched, getRandomCode, convertFlowToByte, formatTime

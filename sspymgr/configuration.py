@@ -18,36 +18,73 @@ class Configuration:
         if not os.path.exists( CONFIG_PATH ):
             _write_default_config()
 
-        with open( CONFIG_PATH, 'r', encoding='utf-8' ) as f:
-            config_obj = yaml.load( f )
-            self.__parse_yaml(config_obj)
-        ## 命令行参数会覆盖掉配置文件的设置
+        ## part of arguments from command line will cover the configuration from config.file
         self.__parse_sys_argv()
         self.__check_configuration()
 
-    def __parse_yaml(self, yamlObj):
-        self.raw_config = yamlObj
-        mgrconfig = yamlObj['sspymgr']
-        self.email = yamlObj['email']
-        self.debug = False
-        if 'debugConfig' in mgrconfig:
-            if mgrconfig['debugConfig']['enabled']:
-                config = mgrconfig['debugConfig']
-                self.debug = True
+    def __parse_yaml(self, path: Path):
+        with path.open( 'r', encoding='utf-8' ) as f:
+            yamlObj = yaml.load( f )
+            self.raw_config = yamlObj
+            mgrconfig = yamlObj['sspymgr']
+            self.email = yamlObj['email']
+            self.debug = False
+            if 'debugConfig' in mgrconfig:
+                if mgrconfig['debugConfig']['enabled']:
+                    config = mgrconfig['debugConfig']
+                    self.debug = True
+                else:
+                    config = mgrconfig['config']
             else:
                 config = mgrconfig['config']
-        else:
-            config = mgrconfig['config']
-        self.host = config['host']
-        self.port = config['port']
-        self.shadowsocks = config.get('shadowsocks', True)
-        self.webserver = config.get('webserver', True)
+            self.host = config['host']
+            self.port = config['port']
+            self.shadowsocks = config.get('shadowsocks', True)
+            self.webserver   = config.get('webserver', True)
 
     def __parse_sys_argv(self):
         parser = argparse.ArgumentParser(description='Run SSPYMGR. Support Python3.x only.')
 
+        self.__add_arguments(parser)
+
+        args = parser.parse_args()
+        
+        self.database = "database"
+
+        if args.config is not None:
+            index = args.config.find(".yaml")
+            try:
+                p = Path(args.config)
+                if index > -1:
+                    self.database = args.config[:index]
+                self.__parse_yaml(p)
+            except:
+                p = Path(CONFIG_PATH)
+                self.__parse_yaml(p)
+        else:
+            p = Path(CONFIG_PATH)
+            self.__parse_yaml(p)
+
+            
+        if args.webhost is not None:
+            self.host = args.webhost
+        if args.disable_ss:
+            self.shadowsocks = False
+        if args.only_ss:
+            self.shadowsocks = True
+            self.webserver = False
+
+
+        self.stream_log = args.log_console
+        # -w start web gui server
+        # -s start shadowsocks server
+
+    def __add_arguments(self, parser):
         parser.add_argument("--log_console", 
             help="Logger output will send to stdout.", action="store_true")
+        parser.add_argument("-c", "--config", 
+            help="Specify configuration file (absolute path), sspymgr will create a new database file whose name is the same as the configuration file, \
+                for example, -c ~/.sspy-mgr/local.yaml will create a database named ~/.sspy-mgr/local.db", nargs="?")
 
         webgroup = parser.add_argument_group('website', 'website options')
         webgroup.add_argument("--webhost", help="Set IP address that web werver listens, \
@@ -61,19 +98,6 @@ class Configuration:
         ssgroup.add_argument("--only_ss", help="Only start backend shadowsocks server \
             with defined communication method (socket or unix sock file) ", 
             action="store_true")
-
-        args = parser.parse_args()
-        if args.webhost is not None:
-            self.host = args.webhost
-        if args.disable_ss:
-            self.shadowsocks = False
-        if args.only_ss:
-            self.shadowsocks = True
-            self.webserver = False
-
-        self.stream_log = args.log_console
-        # -w start web gui server
-        # -s start shadowsocks server
 
     def __check_configuration(self):
         ## TODO check host valid
@@ -100,3 +124,13 @@ sspymgr:
     shadowsocks: true
 """
         f.write( default )
+
+__config = None
+def defaultConfig() -> Configuration:
+    """get single instance of the configuration 
+    """
+    global __config
+    if __config is None:
+        __config = Configuration()
+    
+    return __config

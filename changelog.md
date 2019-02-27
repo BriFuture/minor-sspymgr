@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.0.17
+
+1. seperate database declaration and usage
+2. add arguments option -c (--config), now config file can be specified
+
 ## v0.0.16
 
 1. fix bugs when sscontroller.adapter socket recv datas, it will block and backend tasks will never be executed any more.

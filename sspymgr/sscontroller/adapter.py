@@ -104,7 +104,7 @@ class SSAdapter( object ):
             sleep(0.005)
         try:
             rmsg = self._socket.recv( 2048 )
-            print(rmsg, cmd)
+            logger.debug("resp: {} cmd: {}".format(rmsg, cmd))
             self._processResponse(rmsg, cmd)
         except Exception as exc:
             if type(exc) != BlockingIOError:

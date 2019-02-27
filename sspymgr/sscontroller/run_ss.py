@@ -75,6 +75,9 @@ def new_runSS():
     manager.run(config)
 
 def main(wait=False):
+    """set wait to true, the main process will wait shadowsocks process finished,
+    it might be useful when webserver does not start
+    """
     # import logging
     # log = logging.getLogger( 'Test' )
     # import sys

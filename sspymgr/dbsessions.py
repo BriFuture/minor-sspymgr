@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from .models import db
+from .models import DB
 from flask.sessions import SessionMixin, SessionInterface
 from werkzeug import CallbackDict
 from uuid import uuid4
 from datetime import timedelta, datetime
 
-class Sessions( db.Model ):
+class Sessions( DB.Model ):
     __tablename__ = 'sessions'
-    sid = db.Column( db.String( 255 ), primary_key = True )
-    expired = db.Column( db.DateTime )
-    session = db.Column( db.Text )
+    sid = DB.Column( DB.String( 255 ), primary_key = True )
+    expired = DB.Column( DB.DateTime )
+    session = DB.Column( DB.Text )
 
     def __init__( self, **kwargs ):
-        super( Sessions, self ).__init__( **kwargs )
+        super().__init__( **kwargs )
         if 'sid' in kwargs:
             self.sid = kwargs[ 'sid' ]
         
@@ -49,9 +49,6 @@ class DatabaseSessionInterface( SessionInterface ):
     def __init__( self, database, prefix = 'session:' ):
         self.db = database
         self.prefix = prefix
-        now = datetime.now()
-        Sessions.query.filter(now > Sessions.expired).delete()
-        db.session.commit()
 
     def generate_sid( self ):
         return str( uuid4() )
@@ -94,8 +91,8 @@ class DatabaseSessionInterface( SessionInterface ):
             # session content is empty
             if session.modified:
                 # execute deletion if session is empty but modified
-                db.session.delete( dbrecord )
-                db.session.commit()
+                self.db.session.delete( dbrecord )
+                self.db.session.commit()
                 response.delete_cookie( app.session_cookie_name, domain = domain )
 
             return 
@@ -104,19 +101,26 @@ class DatabaseSessionInterface( SessionInterface ):
         if dbrecord is None:
             # in case database is clean
             dbrecord = Sessions( sid = session.sid )
-            db.session.add( dbrecord )
+            self.db.session.add( dbrecord )
             
         dbrecord.session = self.serializer.dumps( session )
         sexp = self.get_expiration_time( app, session )
         dbrecord.expired = sexp
         # print( "save:", dbrecord )
-        db.session.commit()
+        self.db.session.commit()
         response.set_cookie( app.session_cookie_name, session.sid,
             expires = sexp, httponly = True, domain = domain )
 
 import hashlib
 from .globalfuncs import getRandomCode
+
+def clearExpired(db):
+    now = datetime.now()
+    Sessions.query.filter(now > Sessions.expired).delete()
+    db.session.commit()
+   
 def replaceSessionInterface(app):
-    app.session_interface = DatabaseSessionInterface( database = db )
+    app.session_interface = DatabaseSessionInterface( database = app.m_db )
     # app.secret_key = hashlib.sha1( getRandomCode( 24 ).encode() ).hexdigest()
+    app.m_events.on('afterCreateDb', clearExpired)
     app.secret_key = hashlib.sha1( 'test'.encode() ).hexdigest()

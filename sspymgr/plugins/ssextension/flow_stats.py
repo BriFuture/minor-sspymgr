@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-from sspymgr.models import db
+from sspymgr.models import DB
 from datetime import datetime, timedelta
 
-# class SaveFlow( db.db.Model ):
+# class SaveFlow( DB.DB.Model ):
 #     __tablename__ = 'saveFlow'
-#     id = db.db.Column( db.db.Integer, primary_key = True, autoincrement = True )
-#     port = db.db.Column( db.db.Integer )
-#     flow = db.db.Column( db.db.BigInteger )
-#     time = db.db.Column( db.db.DateTime )
-#     accountId = db.db.Column( db.db.Integer )
+#     id = DB.DB.Column( DB.DB.Integer, primary_key = True, autoincrement = True )
+#     port = DB.DB.Column( DB.DB.Integer )
+#     flow = DB.DB.Column( DB.DB.BigInteger )
+#     time = DB.DB.Column( DB.DB.DateTime )
+#     accountId = DB.DB.Column( DB.DB.Integer )
 
 # def genFlowRecord( tablename ):
 #     def __repr__( self ):
@@ -16,13 +16,13 @@ from datetime import datetime, timedelta
 
 #     props = {
 #         '__tablename__' : tablename,
-#         'id' : db.Column( db.Integer, primary_key = True, autoincrement = True ),
-#         'flow' : db.Column( db.BigInteger ),
-#         'port' : db.Column( db.Integer ),
-#         'time' : db.Column( db.DateTime ),
-#         'accountId' : db.Column( db.Integer ),
+#         'id' : DB.Column( DB.Integer, primary_key = True, autoincrement = True ),
+#         'flow' : DB.Column( DB.BigInteger ),
+#         'port' : DB.Column( DB.Integer ),
+#         'time' : DB.Column( DB.DateTime ),
+#         'accountId' : DB.Column( DB.Integer ),
 #     }
-#     newclass = type( tablename, ( db.Model, ), props )
+#     newclass = type( tablename, ( DB.Model, ), props )
 #     return newclass
 
 # FlowRecord = genFlowRecord( 'flowRecord' )
@@ -31,26 +31,18 @@ from datetime import datetime, timedelta
 # FlowRecordDay  = genFlowRecord( 'flowRecordDay' )
 
 
-class FlowRecord5Min(db.Model):
+class FlowRecord5Min(DB.Model):
     __tablename__ = 'flowRecord_5min'
-    id = db.Column(db.Integer, primary_key=True)
-    port = db.Column(db.Integer)
-    flow = db.Column(db.Integer)  # unit of bytes
-    date = db.Column(
-        db.String, nullable=False)  # store date in the format: 2018-10-10
-    hour = db.Column(db.Integer, nullable=False)  # 0 - 23
-    minute = db.Column(
-        db.Integer, nullable=False
-    )  # noraml minute here, gap is 5, from 0 to 55: 0 ==> [ 00:00 ~ 04:59 ]
-
-    @staticmethod
-    def genRecord(port: int, flow: int, time: datetime):
-        """time is record time, but should be 
-        """
-        d = '{:%Y-%m-%d}'.format(time)
-        record = FlowRecord5Min(
-            port=port, flow=flow, date=d, hour=time.hour, minute=time.minute)
-        db.session.add(record)
+    id = DB.Column(DB.Integer, primary_key=True)
+    port = DB.Column(DB.Integer)
+    # unit of bytes
+    flow = DB.Column(DB.Integer)  
+    # store date in the format: 2018-10-10
+    date = DB.Column(DB.String, nullable=False) 
+    # 0 - 23
+    hour = DB.Column(DB.Integer, nullable=False)  
+    # noraml minute here, gap is 5, from 0 to 55: 0 ==> [ 00:00 ~ 04:59 ]
+    minute = DB.Column(DB.Integer, nullable=False) 
 
     def to_dict(self):
         di = {
@@ -64,20 +56,24 @@ class FlowRecord5Min(db.Model):
         return '<FlowRecord5Min %d: %d at %s %d>' % (self.port, self.flow,
                                                      self.date, self.hour)
 
+from datetime import datetime, timedelta
 
-from sqlalchemy import func
-from sqlalchemy.sql import label
+from sspymgr import formatTime
+from sspymgr.sscontroller import Account, AccountFlow
+from web_user import User, UserType
+import logging
+logger = logging.getLogger("plugin_sscontroller")
 
 
-class FlowRecordDay(db.Model):
+class FlowRecordDay(DB.Model):
     __tablename__ = 'flowRecord_Day'
-    id = db.Column(db.Integer, primary_key=True)
-    port = db.Column(db.Integer)
-    flow = db.Column(db.Integer)  # unit of bytes
-    date = db.Column(
-        db.String,
+    id = DB.Column(DB.Integer, primary_key=True)
+    port = DB.Column(DB.Integer)
+    flow = DB.Column(DB.Integer)  # unit of bytes
+    date = DB.Column(
+        DB.String,
         nullable=False)  # store date in the format (year and month): 2018-10
-    day = db.Column(db.Integer, nullable=False)  # store day, from 1 to 31
+    day = DB.Column(DB.Integer, nullable=False)  # store day, from 1 to 31
 
     def to_dict(self):
         di = {
@@ -90,20 +86,15 @@ class FlowRecordDay(db.Model):
         return '<FlowRecordDay %d: %d at %s %d>' % (self.port, self.flow,
             self.date, self.day)
 
-    @staticmethod
-    def genRecord(port: int, flow: int, time: datetime):
-        """time is record time, but should be 
-        """
-        date = '{:%Y-%m}'.format(time)
-        record = FlowRecordDay(port=port, flow=flow, date=date, day=time.day)
-        db.session.add(record)
 
 from . import logger
 class FlowStats(object):
     """统计流量，将流量记录到数据库中
     """
+    MINUTE = 5
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, db, *args, **kwargs):
+        self.db = db
         self.min = {}
         # self.hour = {}
         self.day = {}
@@ -129,84 +120,105 @@ class FlowStats(object):
                 self.day[port] += self.min[port]
 
     def record5minToDb(self):
-        # logger.debug("5 min record: {}".format(str(self.min)))
+        now = datetime.now()
+        cond = (now.minute - 1) % self.MINUTE
+        if( cond != 0 ):
+            return
+        gen = 0
         for port in self.min:
             if self.min[port] == 0:
                 # no need to record
                 continue
-            FlowRecord5Min.genRecord(port, self.min[port], datetime.now())
+            self.genMinRecord(self.db, port, self.min[port], datetime.now())
             self.min[port] = 0
-        db.session.commit()
+            gen += 1
+        logger.debug("5 min record to db count: {}".format(gen))
+        self.db.session.commit()
 
     def record1hourToDb(self):
         pass
 
     def record1dayToDb(self):
-        # FlowRecordDay.genRecordFrom5min( now )
+        gen = 0
         for port in self.day:
             if self.day[port] == 0:
                 continue
-            FlowRecordDay.genRecord(port, self.day[port], datetime.now())
+            self.genDayRecord(self.db, port, self.day[port], datetime.now())
             self.day[port] = 0
-        db.session.commit()
+            gen += 1
+        logger.debug("day record to db count: {}".format(gen))
+        self.db.session.commit()
 
-from datetime import datetime, timedelta
+    def genMinRecord(self, port: int, flow: int, time: datetime):
+        """time is record time, but should be 
+        """
+        d = '{:%Y-%m-%d}'.format(time)
+        record = FlowRecord5Min(
+            port=port, flow=flow, date=d, hour=time.hour, minute=time.minute)
+        self.db.session.add(record)
+        return record
 
-from sspymgr import formatTime
-from sspymgr.models import db
-from sspymgr.sscontroller import Account, AccountFlow
-from sspymgr.globalvars import emailManager
-from web_user import User, UserType
-import logging
-logger = logging.getLogger("plugin_sscontroller")
-
-def checkAllAccounts():
-    """Action: check accounts status and userType
-    """
-    dbaccounts = Account.query.all()
-    # accountFlow = AccountFlow.query.all()
-    for acc in dbaccounts:
-        # for flow in accountFlow:
-        #     if acc.port == flow.port:
-        #         acc._flow = flow
-        #         break
-        # if acc.is_valid():
-        uid = acc.userId
-        user = User.query.filter_by(id=uid).first()
-        if user is None:
-            continue
-        now = datetime.now()
-        if now < acc.expire: 
-            if canSendLastDay(user) and (acc.expire - now) < timedelta(days=1):
-                sendLastDay(acc)
-        else:
-            user.type = UserType.INVALID.value
+    def genDayRecord(self, port: int, flow: int, time: datetime):
+        """time: record time
+        """
+        date = '{:%Y-%m}'.format(time)
+        record = FlowRecordDay(port=port, flow=flow, date=date, day=time.day)
+        self.db.session.add(record)
+        return record
         
-        db.session.commit()
-    
 
-def sendLastDay(acc: Account, user: User):
-    logger.debug("<{} : {}> will expire soon".format(user.email, user.comment))
+class AccountsChecker(object):
+    app = None
+    def __init__(self, app, *args, **kwargs):
+        self.app = app
 
-    content = """Hi, your account of SSPY-MGR will be expired within one day (at {}).<br />
-    Please go to {} to rechart Your account.(Your ss account Port: {})
-    """.format(formatTime(acc.expire), acc.server, acc.port)
-    user.type = UserType.NOTIFIED.value
-    subject = "账户过期提醒"
+    def checkAllAccounts(self):
+        """Action: check accounts status and userType
+        """
+        dbaccounts = Account.query.all()
+        # accountFlow = AccountFlow.query.all()
+        for acc in dbaccounts:
+            # for flow in accountFlow:
+            #     if acc.port == flow.port:
+            #         acc._flow = flow
+            #         break
+            # if acc.is_valid():
+            uid = acc.userId
+            user = User.query.filter_by(id=uid).first()
+            if user is None:
+                continue
+            now = datetime.now()
+            if now < acc.expire: 
+                if self.canSendLastDay(user) and (acc.expire - now) < timedelta(days=1):
+                    self.sendLastDay(acc, self.app.m_emailManager)
+            else:
+                user.type = UserType.INVALID.value
+            
+        self.app.m_db.session.commit()
+        
+    # from 
+    def sendLastDay(self, acc: Account, user: User, emailManager):
+        logger.debug("<{} : {}> will expire soon".format(user.email, user.comment))
 
-    emailManager.add_email(
-        to=user.email,
-        subject=subject,
-        content=content,
-        type="last day notify")
+        content = """Hi, your account of SSPY-MGR will be expired within one day (at {}).<br />
+        Please go to {} to rechart Your account.(Your ss account Port: {})
+        """.format(formatTime(acc.expire), acc.server, acc.port)
+        user.type = UserType.NOTIFIED.value
+        subject = "账户过期提醒"
+        pass
+        emailManager.add_email(
+            to=user.email,
+            subject=subject,
+            content=content,
+            type="last day notify")
 
 
-def canSendLastDay(user):
-    if user.type is None or len(user.type) == 0:
+    def canSendLastDay(self, user):
+        if user.type is None or len(user.type) == 0:
+            return False
+        utype = UserType(user.type)
+        if (utype == UserType.BANNED or utype == UserType.TRIAL):
+            return False
+        if (utype != UserType.NOTIFIED):
+            return True
         return False
-    utype = UserType(user.type)
-    if (utype == UserType.BANNED or utype == UserType.TRIAL):
-        return False
-    if (utype != UserType.NOTIFIED):
-        return True
-    return False

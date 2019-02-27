@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from sspymgr import db,\
+from sspymgr import DB, \
     createLogger, getRandomCode, formatTime
 
 logger = createLogger("plugin_order", stream=False, logger_prefix="[Plugin Order]")
@@ -9,16 +9,16 @@ from datetime import datetime, timedelta
 from sqlalchemy.sql import text
 
 
-class Product(db.Model):
+class Product(DB.Model):
     __tablename__ = 'product'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    # name = db.Column( db.String( 255 ) )
-    type = db.Column(db.Integer)  # 0 or none stands by enabled
-    flow = db.Column(db.Integer)  # unit: Mn
-    price = db.Column(db.Float)  # unit: ￥
-    enable = db.Column(db.Boolean, default=True)
-    duration = db.Column(db.Integer)  # unit: seconds
-    buffer_period = db.Column(db.Integer)  # unit: seconds
+    id = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
+    # name = DB.Column( DB.String( 255 ) )
+    type = DB.Column(DB.Integer)  # 0 or none stands by enabled
+    flow = DB.Column(DB.Integer)  # unit: Mn
+    price = DB.Column(DB.Float)  # unit: ￥
+    enable = DB.Column(DB.Boolean, default=True)
+    duration = DB.Column(DB.Integer)  # unit: seconds
+    buffer_period = DB.Column(DB.Integer)  # unit: seconds
 
     @staticmethod
     def add_type(price: float, flow: int, duration: timedelta,
@@ -28,12 +28,6 @@ class Product(db.Model):
         ot = Product(
             price=price, flow=flow, duration=dseconds, buffer_period=bseconds)
         return ot
-
-    @staticmethod
-    def existing_type_count():
-        sql = 'SELECT count(*) FROM %s' % Product.__tablename__
-        res = db.engine.execute(text(sql)).first()
-        return res[0]
 
     def to_dict(self):
         return {
@@ -59,15 +53,15 @@ class Product(db.Model):
     def __repr__(self):
         return '<Product %d %s>' % (self.id, self.enable)
 
-class ProductQrcode(db.Model):
+class ProductQrcode(DB.Model):
     __tablename__ = 'productQrcode'
-    id = db.Column(db.Integer, primary_key=True)
-    pid = db.Column(db.Integer, nullable=False)  # product Id
-    category = db.Column(db.String(32), nullable=True) # such as alipay or wechatpay
-    qrcode = db.Column(db.TEXT)  # base64 encoded image
-    desc = db.Column(db.String(255))  
-    path = db.Column(db.String(255)) # if save image as files, path to find it
-    remark = db.Column(db.String(32)) # reserved
+    id = DB.Column(DB.Integer, primary_key=True)
+    pid = DB.Column(DB.Integer, nullable=False)  # product Id
+    category = DB.Column(DB.String(32), nullable=True) # such as alipay or wechatpay
+    qrcode = DB.Column(DB.TEXT)  # base64 encoded image
+    desc = DB.Column(DB.String(255))  
+    path = DB.Column(DB.String(255)) # if save image as files, path to find it
+    remark = DB.Column(DB.String(32)) # reserved
 
     def to_dict(self):
         di = {
@@ -82,22 +76,22 @@ class ProductQrcode(db.Model):
         return di
 
 
-class Order(db.Model):
+class Order(DB.Model):
     __tablename__ = 'order'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column(db.Integer, nullable=False)
-    pid = db.Column(db.Integer, nullable=False)
-    server = db.Column(db.String(255))
-    code = db.Column(db.String(32))
-    alipay = db.Column(db.Float)
-    wechatpay = db.Column(db.Float)
-    orderTime = db.Column(db.DateTime)
-    commentByUser = db.Column(db.Text, default='')
-    checked = db.Column(
-        db.Boolean,
-        default=False)  # whether the Manager has confirmed this order
-    bufferPeriodExpire = db.Column(db.DateTime)  # buffer period
-    expire = db.Column(db.DateTime)
+    id = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
+    uid = DB.Column(DB.Integer, nullable=False)
+    pid = DB.Column(DB.Integer, nullable=False)
+    server = DB.Column(DB.String(255))
+    code = DB.Column(DB.String(32))
+    alipay = DB.Column(DB.Float)
+    wechatpay = DB.Column(DB.Float)
+    orderTime = DB.Column(DB.DateTime)
+    commentByUser = DB.Column(DB.Text, default='')
+    # whether the Manager has confirmed this order
+    checked = DB.Column(DB.Boolean, default=False)  
+    # buffer period
+    bufferPeriodExpire = DB.Column(DB.DateTime)  
+    expire = DB.Column(DB.DateTime)
 
     @staticmethod
     def place_order(uid: int, product: Product, **kwargs):
@@ -111,15 +105,10 @@ class Order(db.Model):
         od.checked = kwargs.get('checked', False)
         od.bufferPeriodExpire = timedelta(seconds=product.buffer_period) + now
         od.expire = timedelta(seconds=product.duration) + now
-        db.session.add(od)
-        db.session.commit()
+        app.m_db.session.add(od)
+        app.m_db.session.commit()
         # return od
 
-    @staticmethod
-    def count_all():
-        sql = 'SELECT count(*) FROM %s' % Order.__tablename__
-        res = db.engine.execute(text(sql)).first()
-        return res[0]
 
     def is_valid(self):
         now = datetime.now()
@@ -155,7 +144,10 @@ class Order(db.Model):
 
 
 def init_product_type():
-    count = Product.existing_type_count()
+    sql = 'SELECT count(*) FROM %s' % Product.__tablename__
+    res = app.m_db.engine.execute(text(sql)).first()
+    
+    count = res[0]
     if count == 0:
         ptype = (
             (1,  8 * 1024, timedelta(days=7), timedelta(hours=4)), 
@@ -166,13 +158,12 @@ def init_product_type():
         )
         for ot in ptype:
             new_product = Product.add_type(ot[0], ot[1], ot[2], ot[3])
-            db.session.add(new_product)
-        db.session.commit()
+            app.m_db.session.add(new_product)
+        app.m_db.session.commit()
 
 
 from flask import jsonify, session, request
-from sspymgr.globalvars import emailManager, controller
-
+app = None
 
 def user_confirm_order(user):
     """用户成功下单时通知管理员
@@ -182,7 +173,7 @@ def user_confirm_order(user):
     content = "用户(id: {}, email: {}) 于 {} 成功下单，请确认。".format(
         user.id, user.email, datetime.now())
 
-    emailManager.add_email(
+    app.m_emailManager.add_email(
         to=admin.email,
         subject="用户下单",
         content=content,
@@ -223,7 +214,7 @@ def registerApi(api):
         oldOne = Product.query.filter_by(id = id).first()
         if oldOne is None:
             oldOne = Product(price=5, duration=1296000,buffer_period=86400, flow=40960)
-            db.session.add(oldOne)
+            app.m_db.session.add(oldOne)
             # return jsonify( {'status': 'fail'})
         oldOne.price = request.form.get('price', oldOne.price)
         oldOne.duration = request.form.get('duration', oldOne.duration)
@@ -233,7 +224,7 @@ def registerApi(api):
         enable = request.form.get('enable', None)
         if enable is not None:
             oldOne.enable = (enable == 'true')
-        db.session.commit()
+        app.m_db.session.commit()
         return jsonify({'status': 'success'})
 
     @api.route_admin('/productQrcode/update', methods=['POST'])
@@ -246,14 +237,14 @@ def registerApi(api):
             if pid == -1:
                 return jsonify({'status': 'fail'})
             qrcode = ProductQrcode(pid = pid, category='alipay')
-            db.session.add(qrcode)
+            app.m_db.session.add(qrcode)
         qrcode.category = request.form.get('category', qrcode.category)
         qrcode.qrcode = request.form.get('qrcode')
         qrcode.desc = request.form.get('desc', qrcode.desc)
         qrcode.path = request.form.get('path', qrcode.path)
         qrcode.remark = request.form.get('remark', qrcode.remark)
         
-        db.session.commit()
+        app.m_db.session.commit()
         return jsonify({'status': 'success'})
 
     @api.route_admin('/productQrcode/delete', methods=['POST'])
@@ -356,12 +347,12 @@ def registerApi(api):
         # order history
         Order.place_order(uid, product, comment=comment)
 
-        if controller.renew_account(
+        if app.m_sscontroller.renew_account(
                 flow, timedelta(seconds=product.duration), uid=uid):
             user = User.query.filter_by(id=uid).first()
             user.type = UserType.ACTIVE.value
             user_confirm_order(user)
-            db.session.commit()
+            app.m_db.session.commit()
         else:
             state['status'] = 'fail'
         return jsonify(state)
@@ -375,8 +366,10 @@ def registerApi(api):
 
     logger.debug("api Registered")
 
-
-def init(app):
+from sspymgr import Manager
+def init(iapp: Manager):
+    global app
+    app = iapp
     app.m_events.on('beforeRegisterApi', registerApi)
     init_product_type()
     logger.debug("inited")

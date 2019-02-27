@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from .path_helper import DATA_DIR
-from os.path import abspath, join
 
-_SQLITE_DATABASE = 'database.db'
-SQLITE_DATABASE_LOC = abspath( join( DATA_DIR, _SQLITE_DATABASE ) )
+
+from os.path import abspath, join
+def getDatabaseLoc(name: str):
+    if ".db" not in name:
+        name = "{}.db".format(name)
+    return abspath( join( DATA_DIR, name ) )
 
 """
-from ..globalvars import app
+from . import app
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % SQLITE_DATABASE_LOC
 # app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
@@ -65,20 +68,26 @@ from sqlalchemy import orm
 from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy as sqlalchemy
 
-def createDatabase():
-    Model = declarative_base()
-
-    engine = sqlalchemy.create_engine('sqlite:///{}'.format(SQLITE_DATABASE_LOC))
-    Model.metadata.bind = engine
+Model = declarative_base()
+sqlalchemy.Model = Model
+# Database Proxy
+DB = sqlalchemy
+def createDatabase(name = None):
+    """create instance of sqlalchemy Database
+    """
+    if name is None:
+        name = 'database.db'
+    if '.db' not in name:
+        name = "{}.db".format(name)
+        
+    engine = sqlalchemy.create_engine('sqlite:///{}'.format(getDatabaseLoc(name)))
     session = orm.scoped_session(orm.sessionmaker(bind = engine))
-
-    sqlalchemy.session = session
-    sqlalchemy.Model = Model
     sqlalchemy.engine = engine
-
-    sqlalchemy.create_all = Model.metadata.create_all
-    Query.paginate = paginate
+    Model.metadata.bind = engine
     Model.query = session.query_property()
-    return sqlalchemy
+    sqlalchemy.session = session
+    sqlalchemy.create_all = Model.metadata.create_all
 
-db = createDatabase()
+
+    Query.paginate = paginate
+    return sqlalchemy

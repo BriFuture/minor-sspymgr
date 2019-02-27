@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from sspymgr import getRandomCode, convertFlowToByte
-from sspymgr.models import db
 from sspymgr.sscontroller import *
-from sspymgr.globalvars import controller
 import logging
 logger = logging.getLogger("plugin_sscontroller")
 
@@ -16,23 +14,20 @@ from sqlalchemy.sql import func
 from .flow_stats import FlowRecord5Min, FlowRecordDay
 
 from web_settings import WebguiSetting
-def availiable_port() -> int:
+def availiable_port(db) -> int:
     port = db.session.query(func.max(Account.port)).scalar()
-    # db.session.query(db.func.max(User.numLogins)).scalar()
-    # maxsql = 'SELECT max(port) FROM %s' % Account.__tablename__
-    # max = db.engine.execute( text( maxsql ) ).first()
-    # if max[0] is None:
+
     if port is None:
         port = WebguiSetting.getSetting(key='shadowsock_port_range_start',\
-            default_value=45000, default_type="Number").getTypedValue()
+            default_value=45001, default_type="Number").getTypedValue()
         db.session.commit()
     else:
         port += 1
     return port
 
 
-def registerApi(api):
-    """注册路由
+def registerRoutes(api, app):
+    """register more rotues for sscontroller
     """
     @api.route_admin('/user/getDetail', methods=['GET', 'POST'])
     def admin_getUserDetail():
@@ -76,12 +71,12 @@ def registerApi(api):
 
     @api.route_admin('/account_port', methods=['POST'])
     def on_get_account_port():
-        port = availiable_port()
+        port = availiable_port(app.m_db)
         return str(port)
 
     @api.route_admin('/account/get', methods=['POST'])
     def get_admin_account():
-        accounts = controller.list_account()
+        accounts = app.m_sscontroller.list_account()
         # accounts = Account.query.filter().all()
         return jsonify({
             'status': 'success',
@@ -94,7 +89,7 @@ def registerApi(api):
         try:
             port = int(port)
         except Exception:
-            port = availiable_port()  # should get a useable port
+            port = availiable_port(app.m_db)  # should get a useable port
 
         password = request.form.get('password')
 
@@ -113,7 +108,7 @@ def registerApi(api):
         if not port or not password or not flow or not duration:
             return 'Bad request'
         expire = timedelta(days=duration) + datetime.now()
-        controller.add_account(port=port, password=password, flow=flow, expire=expire)
+        app.m_sscontroller.add_account(port=port, password=password, flow=flow, expire=expire)
         logger.info('successfully add account %d' % port)
         return 'success'
     
@@ -124,7 +119,7 @@ def registerApi(api):
         if newpasswd is None or port is None:
             return jsonify('fail')
         port = int(port)
-        if controller.update_password(newpasswd, port=port):
+        if app.m_sscontroller.update_password(newpasswd, port=port):
             return jsonify('success')
         else:
             return jsonify('fail')
@@ -148,7 +143,7 @@ def registerApi(api):
         flow = flow * unit
         account.totalFlow = flow
         
-        db.session.commit()
+        app.m_db.session.commit()
         return jsonify('success')
 
 
@@ -160,7 +155,7 @@ def registerApi(api):
             return jsonify(result)
         port = int(port)
         newpasswd = getRandomCode(8)
-        if controller.update_password(newpasswd, port=port):
+        if app.m_sscontroller.update_password(newpasswd, port=port):
             result['status'] = 'success'
             result['password'] = newpasswd
         else:
@@ -194,7 +189,7 @@ def registerApi(api):
                     default_value=1, default_type="Number")
                 acc.totalFlow = setting.getTypedValue() * 1024 * 1024 * 1024
             
-        db.session.commit()
+        app.m_db.session.commit()
         result['nexpire'] = acc.expire.timestamp()
         return jsonify(result)
 
@@ -347,7 +342,7 @@ def registerApi(api):
         if not password:
             return jsonify('failed')
         uid = session['userid']
-        return 'success' if controller.update_password(password, uid=uid) else 'fail'
+        return 'success' if app.m_sscontroller.update_password(password, uid=uid) else 'fail'
 
     logger.info("routes api registered")
 

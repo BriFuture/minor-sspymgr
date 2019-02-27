@@ -1,30 +1,32 @@
 # -*- coding: utf-8 -*-
 
-from sspymgr import db, createLogger
+from sspymgr import DB, createLogger
 from sspymgr import getRandomCode, convertFlowToByte
 
 from flask import session
 from datetime import datetime, timedelta
 import hashlib
 
-logger = createLogger("plugin_user", stream=False, logger_prefix="[Plugin User]")
+logger = createLogger(
+    "plugin_user", stream=False, logger_prefix="[Plugin User]")
 
-class User(db.Model):
+
+class User(DB.Model):
     __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type = db.Column(db.String(255))
-    salt = db.Column(db.String(8), nullable=False)
-    email = db.Column(db.String(255), nullable=False)
-    group = db.Column(db.Integer, default=0)
-    level = db.Column(db.Integer, default=1)
-    comment = db.Column(db.String(255), default='')
-    password = db.Column(db.String(255), nullable=False)
-    telegram = db.Column(db.String(255))
-    username = db.Column(db.String(255))
-    lastLogin = db.Column(db.DateTime)
-    createTime = db.Column(db.DateTime)
-    resetPasswordId = db.Column(db.String(255))
-    resetPasswordTime = db.Column(db.DateTime)
+    id = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
+    type = DB.Column(DB.String(255))
+    salt = DB.Column(DB.String(8), nullable=False)
+    email = DB.Column(DB.String(255), nullable=False)
+    group = DB.Column(DB.Integer, default=0)
+    level = DB.Column(DB.Integer, default=1)
+    comment = DB.Column(DB.String(255), default='')
+    password = DB.Column(DB.String(255), nullable=False)
+    telegram = DB.Column(DB.String(255))
+    username = DB.Column(DB.String(255))
+    lastLogin = DB.Column(DB.DateTime)
+    createTime = DB.Column(DB.DateTime)
+    resetPasswordId = DB.Column(DB.String(255))
+    resetPasswordTime = DB.Column(DB.DateTime)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -80,7 +82,8 @@ class User(db.Model):
         return True
 
     def to_dict(self):
-        lastLogin = self.lastLogin.timestamp() if self.lastLogin is not None else None
+        lastLogin = self.lastLogin.timestamp(
+        ) if self.lastLogin is not None else None
         di = {
             'id': self.id,
             'email': self.email,
@@ -95,14 +98,14 @@ class User(db.Model):
         return di
 
 
-class Group(db.Model):
+class Group(DB.Model):
     __tablename__ = 'group'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.DateTime)
-    order = db.Column(db.String(255))
-    comment = db.Column(db.DateTime)
-    showNotice = db.Column(db.Integer, default=1)
-    multiAccount = db.Column(db.Integer, default=0)
+    id = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
+    name = DB.Column(DB.DateTime)
+    order = DB.Column(DB.String(255))
+    comment = DB.Column(DB.DateTime)
+    showNotice = DB.Column(DB.Integer, default=1)
+    multiAccount = DB.Column(DB.Integer, default=0)
 
 
 from enum import Enum, unique
@@ -119,11 +122,11 @@ class UserType(Enum):
     TEST = 'test'
 
 
-# class UserStatus(db.Model):
+# class UserStatus(DB.Model):
 #     __tablename__ = 'UserStatus'
-#     userId = db.Column(db.Integer, nullable=False)
-#     webStatus = db.Column(db.String(64), default=UserType.DEFAULT.value)
-#     ssStatus = db.Column(db.String(64))
+#     userId = DB.Column(DB.Integer, nullable=False)
+#     webStatus = DB.Column(DB.String(64), default=UserType.DEFAULT.value)
+#     ssStatus = DB.Column(DB.String(64))
 
 
 def getCurrentUser():
@@ -164,27 +167,38 @@ def send_checkcode_email(emailaddr, emailManager):
         content=content,
         type="signup checkcode")
 
+
 def send_reset_link(host, email, code, emailManager):
     """重置密码
     """
     link = host + '/vhome#/resetPassword/' + code
     # url_for( 'home.on_resetPasswdWithId', code = code)
     content = 'Hi, 重置密码的链接为: %s，请在时限内重置你的密码' % link
-    emailManager.add_email(to=email, subject="SSPY Reset Password Link",
-        content=content, type="reset password")
+    emailManager.add_email(
+        to=email,
+        subject="SSPY Reset Password Link",
+        content=content,
+        type="reset password")
 
 
 from flask import request, jsonify
+from sspymgr import Manager
+app = None
 
-def init(app):
+
+def init(iapp: Manager):
+    global app
+    app = iapp
     app.m_events.on('beforeRegisterApi', registerApi)
     logger.debug("inited")
+
 
 MAX_CHECKCODE_ATTEMPT = 3
 CHECKCODE_TIMEOUT = timedelta(minutes=10)
 
+
 def registerApi(api):
-    from sspymgr.globalvars import EMAIL_REGEX, emailManager, events
+    from sspymgr import isEmailMatched
     from web_settings import WebguiSetting
 
     @api.route('/home/signin', methods=['POST'])
@@ -236,7 +250,6 @@ def registerApi(api):
 
         return jsonify(resp)
 
-
     @api.route('/home/checkcode', methods=['POST'])
     def on_send_checkcode():
         resp = {'status': 'success'}
@@ -247,7 +260,7 @@ def registerApi(api):
             return jsonify(resp)
 
         exists = User.query.filter_by(email=email).count() > 0
-        if not EMAIL_REGEX.match(email) or exists:
+        if not isEmailMatched(email) or exists:
             resp['status'] = 'fail'
             resp['desc'] = 'Wrong Email or Email already in use'
             return jsonify(resp)
@@ -264,21 +277,21 @@ def registerApi(api):
             return jsonify(resp)
 
         session['checkcode_attempt'] += 1
-        
+
         if session['checkcode_attempt'] <= MAX_CHECKCODE_ATTEMPT:
-            send_checkcode_email(email, emailManager)
+            send_checkcode_email(email, app.m_emailManager)
         else:
             start = datetime.fromtimestamp(session['checkcode_start'])
             now = datetime.now()
             if now - start > CHECKCODE_TIMEOUT:
                 session['checkcode_attempt'] = 1
-                send_checkcode_email(email, emailManager)
+                send_checkcode_email(email, app.m_emailManager)
             else:
                 resp['status'] = 'fail'
-                resp['desc'] = 'Please wait a few minutes before resend check code.'
-        db.session.commit()
+                resp[
+                    'desc'] = 'Please wait a few minutes before resend check code.'
+        app.m_db.session.commit()
         return jsonify(resp)
-
 
     @api.route('/home/signup', methods=['POST'])
     def on_home_signup():
@@ -300,7 +313,7 @@ def registerApi(api):
         if (len(password) == 0):
             resp['password'] = 'Password is Empty'
             valid = False
-        if valid and not EMAIL_REGEX.match(request.form['email']):
+        if valid and not isEmailMatched(request.form['email']):
             resp['email'] = 'Wrong email or not able to sign up now'
             valid = False
 
@@ -316,40 +329,42 @@ def registerApi(api):
         if (session.get('usercheckcode').lower() == checkcode.lower()):
             email = email.strip()
             user = User(email=email, password=password)
-            db.session.add(user)
+            app.m_db.session.add(user)
             setting = WebguiSetting.getSetting(key='signup_remain_limit')
             setting.value = setting.getTypedValue() - 1
-            db.session.commit()
+            app.m_db.session.commit()
             # add account into shadowsocks server, but there is a problem is that if not committed,
             # user.id will be None
             user = User.query.filter_by(email=email).first()
-            events.trigger("webuser_signup_success", dict(
-                userId=user.id,
-                flow=convertFlowToByte(1, 'G'),
-            ))
+            app.m_events.trigger(
+                "webuser_signup_success",
+                dict(
+                    userId=user.id,
+                    flow=convertFlowToByte(1, 'G'),
+                ))
 
             # checkcode will be removed after user have been added
             session.pop('usercheckcode')
             # auto signin
             resp['status'] = 'success'
             user_signin(user)
-            
-            db.session.commit()
+
+            app.m_db.session.commit()
         return jsonify(resp)
 
     @api.route('/home/requestReset', methods=['POST'])
     def on_home_requestReset():
         state = {'status': 'success'}
         email = request.form.get('email', '')
-        if (len(email) == 0 or not EMAIL_REGEX.match(request.form['email'])):
+        if (len(email) == 0 or not isEmailMatched(request.form['email'])):
             state['status'] = 'fail'
         user = User.query.filter_by(email=email).first()
 
         if user:
             user.request_reset_passwd()
             code = '%d_%s' % (user.id, user.resetPasswordId)
-            send_reset_link(request.host, email, code, emailManager)
-            db.session.commit()
+            send_reset_link(request.host, email, code, app.m_emailManager)
+            app.m_db.session.commit()
         else:
             state['status'] = 'fail'
         return jsonify(state)
@@ -373,7 +388,7 @@ def registerApi(api):
             return jsonify(state)
 
         result = user.do_reset_passwd(resetId, newpw)
-        db.session.commit()
+        app.m_db.session.commit()
         if not result:
             state['status'] = 'fail'
             state['hint'] = 'Your code seems not right or expired'
@@ -395,7 +410,7 @@ def registerApi(api):
             return jsonify('fail')
         newp = request.form.get('newPassword')
         user.updatePassword(newp)
-        db.session.commit()
+        app.m_db.session.commit()
         return jsonify('success')
 
     # ===============  admin route  =================
@@ -409,7 +424,7 @@ def registerApi(api):
             return jsonify('fail')
         user.comment = comment
         user.type = utype
-        db.session.commit()
+        app.m_db.session.commit()
         return jsonify('success')
 
     @api.route_admin('/user/getAll', methods=['POST'])

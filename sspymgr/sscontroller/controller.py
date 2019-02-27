@@ -3,17 +3,16 @@
 import json
 from datetime import datetime, timedelta
 
-from .database import db, Account, AccountFlow
+from .database import Account, AccountFlow
 from .utils import logger, ssAddr
 from .adapter import SSAdapter
-import threading
-from time import sleep
 
 class SSController(object):
     """Account: created -> added -> invalid -> removed
     """
 
-    def __init__(self):
+    def __init__(self, db):
+        self.db = db
         self.stat_counter = 0
         self.stats = None
 
@@ -26,8 +25,6 @@ class SSController(object):
             print( exc )
         self._adapter = adapter
         self.__load_accounts_fromdb()
-        job_thread = threading.Thread(target = self.execute)
-        job_thread.start()
 
 
     def setStats(self, stats):
@@ -75,7 +72,7 @@ class SSController(object):
                     acc.status = 'added'
             # logger.debug("process stats: {}".format(accounts[p]))
             # logger.debug( 'after statis: %d %d' % (acc.port, acc._flow.flow ) )
-        db.session.commit()
+        self.db.session.commit()
 
     def __load_accounts_fromdb(self):
         """only called once after program restart
@@ -93,7 +90,7 @@ class SSController(object):
                     acc.status = 'added'
             elif acc.status == 'added':
                 self._adapter.add_port(acc.port, acc.password)
-        db.session.commit()
+        self.db.session.commit()
 
     def add_account(self, port, password, **kwargs):
         """
@@ -118,10 +115,10 @@ class SSController(object):
         flow = AccountFlow(port=port, updateTime=now, checkTime=now)
         flow.autoBanTime = kwargs['expire']
 
-        db.session.add(account)
-        db.session.add(flow)
+        self.db.session.add(account)
+        self.db.session.add(flow)
         self._adapter.add_port(port, password)
-        db.session.commit()
+        self.db.session.commit()
         return True
 
     def del_account(self, port, **kwargs):
@@ -131,9 +128,9 @@ class SSController(object):
         account = Account.query.filter_by(port=port).first()
         account.status = 'removed'
         accountFlow = AccountFlow.query.filter_by(port=port).first()
-        db.session.delete(accountFlow)
-        db.session.delete(account)
-        db.session.commit()
+        self.db.session.delete(accountFlow)
+        self.db.session.delete(account)
+        self.db.session.commit()
 
     def get_account(self, id):
         account = Account.query.filter_by(id=id).first()
@@ -178,7 +175,7 @@ class SSController(object):
         ## communicate with shadowsocks
         self._adapter.remove_port(acc.port)
         self._adapter.add_port(acc.port, acc.password)
-        db.session.commit()
+        self.db.session.commit()
         return True
 
     
@@ -198,15 +195,13 @@ class SSController(object):
             return False
         self._adapter.update_port(account.port, password)
         account.password = password
-        db.session.commit()
+        self.db.session.commit()
         return True
 
     def execute(self):
         """send command and recieve message
         """
-        while 1:
-            self._adapter.execute()
-            sleep(1)
+        self._adapter.execute()
 
     def list_account(self, atype='all'):
         """

@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
-from sspymgr import db, createLogger
+from sspymgr import DB, createLogger
 logger = createLogger("plugin_annoucement", stream=False, logger_prefix="[Plugin announcement]")
 
 from datetime import datetime
 
-class Announcement(db.Model):
+class Announcement(DB.Model):
     """公告数据模型
     """
     __tablename__ = 'announcement'
-    id = db.Column(db.Integer, primary_key = True)
-    title = db.Column(db.String(255), nullable=False)
-    variant = db.Column(db.String(32)) # primary, success, warn
-    content = db.Column(db.BLOB)
-    createtime = db.Column(db.DateTime, default=datetime.now)
-    top = db.Column(db.Integer, default=0) 
+    id = DB.Column(DB.Integer, primary_key = True)
+    title = DB.Column(DB.String(255), nullable=False)
+    variant = DB.Column(DB.String(32)) # primary, success, warn
+    content = DB.Column(DB.BLOB)
+    createtime = DB.Column(DB.DateTime, default=datetime.now)
+    top = DB.Column(DB.Integer, default=0) 
 
     def to_dict(self):
         content = self.content.decode('utf-8') if self.content is not None else ''
@@ -28,6 +28,7 @@ class Announcement(db.Model):
         }
         return di
 
+app = None
 from flask import request, jsonify
 def registerApis(api):
     @api.route_admin('/announcement/create', methods=['POST'])
@@ -42,8 +43,8 @@ def registerApis(api):
         top = request.form.get('top', 0)
         ann = Announcement(title=title, 
             variant=variant, content=content.encode(), top=top)
-        db.session.add(ann)
-        db.session.commit()
+        app.m_db.session.add(ann)
+        app.m_db.session.commit()
         return jsonify(state)
 
     @api.route_admin('/announcement/getAll', methods=['GET', 'POST'])
@@ -76,6 +77,8 @@ def registerApis(api):
 
     logger.debug("api registered")
 
-def init(app):
+def init(iapp):
+    global app
+    app = iapp
     app.m_events.on("beforeRegisterApi", registerApis)
     logger.info("inited")
