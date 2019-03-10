@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
-"""
-project is under /home/future/minor-sspy-mgr which the TOP_PATH is,
-本文件不依赖 sspymgr 中的其他项目
+"""Description: More convenient way for accessing specified path or file locaiton.
+It's written a bit earlier as this project builds. I only know ``os.path`` to get
+all path at that time, but as I learned more knowledge of python, I think it will
+be better if they are replaced with pathlib.Path and it will be more readable. 
+
+Author: BriFuture
+
+Modified: 2019/03/10 19:57
 """
 import os, sys
 
@@ -13,8 +18,8 @@ USER_HOME = expanduser("~")
 
 DATA_DIR = abspath(join(USER_HOME, '.sspy-mgr'))
 LOG_DIR = abspath(join(DATA_DIR, 'log'))
-"""配置文件的绝对路径
-"""
+
+#配置文件的绝对路径 absolute path
 CONFIG_PATH = abspath(join(DATA_DIR, 'config.yaml'))
 
 if not exists(DATA_DIR):
@@ -25,8 +30,8 @@ if not exists(LOG_DIR):
 import logging
 
 
-def createLoggerFile(name, level=logging.DEBUG):
-    """在统一的日志目录下创建日志文件，返回 FileHandler
+def createLoggerFile(name, level=logging.DEBUG) -> logging.FileHandler:
+    """Create log file under specified directory
     """
     fmt = "%(asctime)s %(levelname)s:  %(message)s"
     formatter = logging.Formatter(fmt)
@@ -41,9 +46,10 @@ def createLoggerFile(name, level=logging.DEBUG):
 log_to_console = False
 def createLogger(name, level=logging.DEBUG, stream=False, logger_prefix=""):
     """create logger for different modules
-    @param name logger name，若 logger 中已经包含 Handler，则不会添加新的 Handler
-    level 设置新创建的 logger 的记录 level，默认为 DEBUG
-    stream 是否设置流失处理器，默认为 False
+    @param ``name``: logger name. New Handlers won't be attached to the logger
+    if logger already has Other Handlers.
+    @param ``level`` set the lever of FileHandler, logging.DEBUG by default
+    @param ``stream`` flag to indicate whether to add a StreamHandler, False by default
     """
     fh = createLoggerFile(name, level=level)
 

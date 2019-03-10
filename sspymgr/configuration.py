@@ -1,12 +1,23 @@
 # -*- coding: utf-8 -*-
+"""Description: This module controls the configuration class and configuration parse processing.
+Command line arguments provided by user will be parsed within the configuration class ``Configuration``.
+In order to get the same config object within other sub modules, there is a function called ``defaultConfig``
+which returns singliton instance of Configuration.
+
+Author: BriFuture
+Modified: 2019/03/10 19:43
+"""
 import os
 basedir = os.path.abspath( os.path.dirname( __file__) )
 import yaml
 from pathlib import Path
 from .path_helper import CONFIG_PATH
-import argparse
+from gettext import gettext as tr
 
 class Configuration:
+    """This class is used for integrate configuration file reading/writing and command line arguments parsing.
+    DO NOT instance this class directly, use ``defaultConfig`` function instead
+    """
     SECRET_KEY = os.environ.get( 'SECRET_KEY' ) or 'ITISAHARDGUESSSTRING'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     
@@ -43,7 +54,8 @@ class Configuration:
             self.webserver   = config.get('webserver', True)
 
     def __parse_sys_argv(self):
-        parser = argparse.ArgumentParser(description='Run SSPYMGR. Support Python3.x only.')
+        import argparse
+        parser = argparse.ArgumentParser(description=tr('Run SSPYMGR. Support Python3.x only.'))
 
         self.__add_arguments(parser)
 
@@ -81,22 +93,22 @@ class Configuration:
 
     def __add_arguments(self, parser):
         parser.add_argument("--log_console", 
-            help="Logger output will send to stdout.", action="store_true")
+            help=tr("Logger output will send to stdout."), action="store_true")
         parser.add_argument("-c", "--config", 
-            help="Specify configuration file (absolute path), sspymgr will create a new database file whose name is the same as the configuration file, \
-                for example, -c ~/.sspy-mgr/local.yaml will create a database named ~/.sspy-mgr/local.db", nargs="?")
+            help=tr("Specify configuration file (absolute path), sspymgr will create a new database file whose name is the same as the configuration file, \
+                for example, -c ~/.sspy-mgr/local.yaml will create a database named ~/.sspy-mgr/local.db"), nargs="?")
 
         webgroup = parser.add_argument_group('website', 'website options')
-        webgroup.add_argument("--webhost", help="Set IP address that web werver listens, \
-            for example 0.0.0.0 for IPv4, :: for IPv6", nargs="?")
-        webgroup.add_argument("--webport", help="Set port that Website listens, usually 80", nargs="?")
+        webgroup.add_argument("--webhost", help=tr("Set IP address that web werver listens, \
+            for example 0.0.0.0 for IPv4, :: for IPv6"), nargs="?")
+        webgroup.add_argument("--webport", help=tr("Set port that Website listens, usually 80"), nargs="?")
 
-        ssgroup = parser.add_argument_group('shadowsocks', 'integrated shadowsocks opration')
-        ssgroup.add_argument("--disable_ss", help="Enable backend shadowsocks server,\
-            disable it when developing the program may be helpful", 
+        ssgroup = parser.add_argument_group('shadowsocks', tr('integrated shadowsocks opration'))
+        ssgroup.add_argument("--disable_ss", help=tr("Enable backend shadowsocks server,\
+            disable it when developing the program may be helpful"), 
             action="store_true")
-        ssgroup.add_argument("--only_ss", help="Only start backend shadowsocks server \
-            with defined communication method (socket or unix sock file) ", 
+        ssgroup.add_argument("--only_ss", help=tr("Only start backend shadowsocks server \
+            with defined communication method (socket or unix sock file) "), 
             action="store_true")
 
     def __check_configuration(self):
@@ -104,7 +116,7 @@ class Configuration:
 
         pass
 
-def _write_default_config( self ):
+def _write_default_config():
     """only call this method when needed, or config file may be overrided
     """
     with open( CONFIG_PATH, 'w', encoding='utf-8' ) as f:

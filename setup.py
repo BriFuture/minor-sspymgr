@@ -9,10 +9,11 @@ with open("README.md", "r", encoding="utf-8") as fh:
 with open('requirements.txt', "r", encoding="utf-8") as f:
     requires = f.read().splitlines()
 
+from sspymgr import __version__
 setup( 
     name = "sspymgr", 
     packages = find_packages(where='.'), 
-    version = "0.0.17",
+    version = __version__,
 
     entry_points = {
         "console_scripts": [

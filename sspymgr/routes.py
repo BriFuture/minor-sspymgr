@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+"""Description: This module is used for providing api interface for both admin and user frontend.
+When providing apis with normal users, use decorator ``api.route_user``, 
+while providing apis with administrator, use decorator ``api.route_admin``
+It also provides a convinient function getPageArgs for requesting paged information.
+
+Author: BriFuture
+
+Modified: 2019/03/10 19:33
+"""
+
 from flask import Blueprint, request
 
 api = Blueprint('api', __name__)

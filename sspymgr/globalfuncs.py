@@ -72,4 +72,16 @@ def mbflow2str( flow: int ):
     else:
         return '%d Gb' % gb
 
+from pathlib import Path
 
+LANGUAGE_DIR = (Path(__file__).parent / "locale").resolve()
+
+import gettext
+def initGettext(domain="sspymgr") -> gettext.gettext:
+    """make some configurations on gettext module 
+    for convenient internationalization
+    """
+    gettext.bindtextdomain(domain, LANGUAGE_DIR)
+    gettext.textdomain(domain)
+    gettext.find(domain, "locale", languages=["zh_CN", "en_US"])
+    return gettext.gettext

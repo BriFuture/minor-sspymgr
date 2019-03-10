@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""Description: This module is used to provide email feature to all
+other sub modules so that they can send email by a simple api.
+
+Author: BriFuture
+
+Modified: 2019/03/10 19:51
+"""
 
 from .models import DB
 from datetime import datetime

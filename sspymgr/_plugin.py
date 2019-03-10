@@ -1,7 +1,22 @@
 # -*- coding: utf-8 -*-
+"""Description: Core Subsystem in sspymgr, it provides plugin feature for the application.
+It's a module which relies on importlib, the builtin module in python, but still has some
+space to make improvements. It contains Events, Tasks and PluginLoader.
+Note: And there is a problem which has not be solved if your python version is 3.6, 
+it will work fine. But if your python version is higher than 3.6, for example, 3.7, 
+it may not load plugins as expected, for that case, you should manually annotate the 
+code under ``load_plugins`` function.
+
+Author: BriFuture
+
+Modified: 2019/03/10 20:14
+"""
+
 
 from .path_helper import createLogger
 logger = createLogger('pluginLoader', stream=False, logger_prefix="[PluginLoader]")
+
+from gettext import gettext as tr
 
 class Events(dict):
     def __getitem__(self,name):
@@ -79,8 +94,8 @@ def load_plugins(app):
     
     import importlib
 
-    # 过滤掉依赖关系无法满足的插件
-    logger.info("开始过滤插件。")
+    # filter those plugins whose dependencies are not meet
+    logger.info(tr("Starting filtering plugins..."))
     plugin_module = []
     no_dependences = []
     plugin_file_names = [plugin_file.stem for plugin_file in plugins]
@@ -98,7 +113,7 @@ def load_plugins(app):
             pm.name = name
 
             if(not hasattr(pm, 'requirement') or len(pm.requirement) == 0):
-                logger.debug("导入无依赖插件 {}".format(pm))
+                logger.debug(tr("Importing dependless plugin: {}").format(pm))
                 no_dependences.append(pm)
             else:
                 meet = True
@@ -107,23 +122,23 @@ def load_plugins(app):
                         meet = False
                 if meet:
                     plugin_module.append(pm)
-                    logger.debug("导入有依赖插件 {}".format(pm))
+                    logger.debug(tr("Importing depend plugin: {}").format(pm))
         except Exception as exc:
             logger.warn("Load plugin `{}` Error: {}".format(plugin_file, exc))
     plugins.clear()
     importlib.invalidate_caches()
-    logger.info("过滤插件完毕，无依赖插件数：{}，有依赖插件数: {}"\
+    logger.info(tr("Plugins is filtered, count of plugins that dont rely on others: {}, count of plugins that rely on others: {}")\
         .format(len(no_dependences), len(plugin_module)))
 
     num_all_plugins = len(no_dependences) + len(plugin_module)
-    logger.info("准备初始化插件")
+    logger.info(tr("Preparing to initialize plugins..."))
     app.m_plugins = []
     num_loaded = 0
     level_loaded = 0
     while(num_loaded < num_all_plugins and level_loaded < 3):
         num_loaded += __do_load_plugin(app, plugin_module, no_dependences)
         level_loaded += 1
-    logger.info("插件初始化完成, 加载了{}个插件".format(num_loaded))
+    logger.info(tr("Initialization completed, {} plugins has been loaded").format(num_loaded))
 
 def __do_load_plugin(app, plugin_module, no_dependences):
     # 首先加载没有依赖的插件
@@ -131,13 +146,13 @@ def __do_load_plugin(app, plugin_module, no_dependences):
     num_loaded = 0
     for nd in no_dependences:
         try:
-            logger.debug("初始化插件: {}".format(nd))
+            logger.debug(tr("Init plugin: {}").format(nd))
             nd.init(app)
             # logger.debug("load: {}".format(nd))
             app.m_plugins.append(nd)
             num_loaded += 1
         except Exception as exc:
-            logger.warn("Init plugin `{}` Error: {}".format(nd, exc))
+            logger.warn("Error when init plugin `{}` : {}".format(nd, exc))
 
     # logger.debug("""loaded: {}, \nno_depend: {}, 
     #     plugin_module: {}""".format(app.m_plugins, no_dependences, plugin_module))

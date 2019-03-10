@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+"""Description: replace sessions location, all neccessary session information will
+be stored in database on your server. So it may be safer to store information within
+session. It will clear all expired session record in database every time the SSPYMGR
+starts (not interval check so the number of records may get bigger and bigger, it 
+will be fixed some other time)
+
+Author: BriFuture
+
+Modified: 2019/03/10 20:07
+"""
 
 from .models import DB
 from flask.sessions import SessionMixin, SessionInterface

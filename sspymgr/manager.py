@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""Description: Used for integrating all necessary objects and providing more convenient access 
+to those objects.
+
+Author: BriFuture
+
+Modified: 2019/03/10 19:48
+"""
 from flask import Flask
 
 from .dbsessions import replaceSessionInterface
@@ -19,12 +27,12 @@ def run_threaded(job_func):
 class Manager(Flask):
     """Sub class of Flask, it would support better interface 
     .. Properties:: global variables
-        m_config: Config which is set by configuration file or sys.argv
-        m_db: sqlalchemy, database reference
-        m_events: plugin.Events, events control and trigger
-        m_tasker: plugin.BackTask, run background tasks such as shadowsocks flow stats
-        m_sscontroller: sscontroller which is used to communicate with shadowsocks server
-        m_emailManager: emailManager which is used to send and record email
+        ``m_config``: Config which is set by configuration file or sys.argv
+        ``m_db``: sqlalchemy, database reference
+        ``m_events``: plugin.Events, events control and trigger
+        ``m_tasker``: plugin.BackTask, run background tasks such as shadowsocks flow stats
+        ``m_sscontroller``: sscontroller which is used to communicate with shadowsocks server
+        ``m_emailManager``: emailManager which is used to send and record email
     """
     m_config = None
     m_db = None

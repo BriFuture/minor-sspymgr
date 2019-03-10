@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
-from .path_helper import DATA_DIR
 
+"""Description: There are two main purpose of this module:
+1. provide sqlalchemy as DB to other sub modules so they can define 
+their database models even the database instance is not created yet.
+2. provide a function called ``createDatabase`` to attach database to 
+sqlalchemy, so it can get access to these databases (which would be sqlite
+or mysql database).
+
+Author: BriFuture
+
+Modified: 2019/03/10 19:56
+"""
+from .path_helper import DATA_DIR
 
 from os.path import abspath, join
 def getDatabaseLoc(name: str):
