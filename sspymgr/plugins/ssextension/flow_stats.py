@@ -57,10 +57,10 @@ class FlowRecord5Min(DB.Model):
                                                      self.date, self.hour)
 
 from datetime import datetime, timedelta
-
 from sspymgr import formatTime
 from sspymgr.sscontroller import Account, AccountFlow
-from web_user import User, UserType
+from sspymgr.core import User, UserType
+
 import logging
 logger = logging.getLogger("plugin_sscontroller")
 
@@ -100,18 +100,20 @@ class FlowStats(object):
         self.day = {}
         return super().__init__(*args, **kwargs)
 
-    def recordFlow(self, accFlow: dict):
+    def recordFlow(self, port_flow: dict):
         """将流量数据记录到 dict 中
-        accFlow: { 
-            45001: {'flow': 12, 'status': 'added' }, 
-            45002: {...}  
+        port_flow: { 
+            45001: flow, 
+            45002: Account
         }
         """
-        for port, detail in accFlow.items():
+        for port in port_flow:
+            flow = port_flow[port]
             if port not in self.min:
-                self.min[port] = detail['flow']
+                self.min[port] = flow
             else:
-                self.min[port] = self.min[port] + detail['flow']
+                self.min[port] = self.min[port] + flow
+
         for port in self.min:
             if port not in self.day:
                 self.day[port] = self.min[port]
@@ -183,7 +185,6 @@ class AccountsChecker(object):
             #     if acc.port == flow.port:
             #         acc._flow = flow
             #         break
-            # if acc.is_valid():
             uid = acc.userId
             user = User.query.filter_by(id=uid).first()
             if user is None:
@@ -197,7 +198,6 @@ class AccountsChecker(object):
             
         self.app.m_db.session.commit()
         
-    # from 
     def sendLastDay(self, acc: Account, user: User):
         logger.debug("<{} : {}> will expire soon".format(user.email, user.comment))
 

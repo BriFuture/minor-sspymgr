@@ -36,19 +36,20 @@ class Account(DB.Model):
             return 0
         return 0
 
-    def is_valid(self):
-        now = datetime.now()
-        if now > self.expire:
-            return False
-        # accountFlow = AccountFlow.query.filter_by( accountId = self.id ).first()
-        flow = self._flow.flow
-        if flow > self.totalFlow:
-            return False
-        return True
+    def is_flow_remaining(self):
+        """If this account has remaining flow, True returned, otherwise False.
+        """
+        if not hasattr(self, 'account_flow'):
+            self.account_flow = AccountFlow.query.filter_by(port=self.port).first()
+        return self.totalFlow > self.account_flow.flow
 
     def clear_flow(self):
-        self._accountFlow.flow = 0
-        self._flow.flow = 0
+        """Clear flow usage stats
+        """
+        if not hasattr(self, 'account_flow'):
+            self.account_flow = AccountFlow.query.filter_by(
+                port=self.port).first()
+        self.account_flow.flow = 0
 
     def get_used_flow(self):
         if hasattr(self, '_flow'):
@@ -56,7 +57,7 @@ class Account(DB.Model):
         return None
 
     def __repr__(self):
-        return '<Account %d>' % self.id
+        return '<Account {} status: {}>'.format(self.port, self.status)
 
     def to_dict(self):
         di = {

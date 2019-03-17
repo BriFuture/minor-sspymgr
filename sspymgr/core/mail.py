@@ -4,11 +4,15 @@ other sub modules so that they can send email by a simple api.
 
 Author: BriFuture
 
-Modified: 2019/03/10 19:51
+Modified: 2019/03/17 12:35
 """
 
-from .models import DB
+
+__version__ = '0.1.2'
+
+from sspymgr import DB, createLogger
 from datetime import datetime
+logger = createLogger('email', stream=False)
 
 class Email( DB.Model ):
     __tablename__ = 'email'
@@ -48,25 +52,54 @@ from email.header import Header
 from email.mime.text import MIMEText
 from email.utils import parseaddr, formataddr
 
-from .path_helper import createLogger
-logger = createLogger('email', stream=False)
+
+class MailSender(object):
+    """``EmailSender`` is a wrapper of ``email`` module
+    """
+    def __init__(self, host, account, password, port, *args, **kwargs):
+        self._host = host
+        self._account = account
+        self._password = password
+        self._port = port
+        self.server = smtplib.SMTP_SSL(self._host, self._port)
+
+    def reset_server(self):
+        self.server = smtplib.SMTP_SSL(self._host, self._port)
+
+    def send(self, email: Email):
+        msg = MIMEText(email.content, 'html', 'utf-8')
+        msg['Subject'] = Header(email.subject, 'utf-8').encode()
+        msg['From'] = self.__format_addr('SSPY-Mgr <{}>'.format(self._account))
+        msg['To'] = self.__format_addr('Receiver <{}>'.format(email.to) )
+        self.server.connect( self._host, self._port )
+        # self.server.starttls()
+        self.server.ehlo()
+        self.server.login( self._account, self._password)
+        self.server.sendmail( self._account, email.to, msg.as_string())
+        self.server.quit()
+
+    def __format_addr( self, s ):
+        name, addr = parseaddr(s)
+        return formataddr( ( Header(name, 'utf-8').encode(), addr ) )
 
 class EmailManager(object):
+    """Used for generating ``Email`` database record and sending email
+    """
     def __init__(self, config, database, *args, **kwargs):
         # self.config = config
-        _email = config.email
+        email = config.email
         self.db = database
         self._test = config.debug
-        self._host     = _email[ 'host' ]
-        self._account  = _email[ 'account' ]
-        self._password = _email[ 'password' ]
-        self._port     = _email.get( 'port' ) or 465
-        if( self._host == 'smtp host' ):
+        self._host     = email[ 'host' ]
+        if self._host == 'smtp host':
             logger.warning( '[Email] Please Place Your smtp account into config file')
             import sys
             sys.exit( 1 )
         if( self._host == None ) :
             raise ValueError
+
+        port = email.get( 'port' ) or 465
+        self.sender = MailSender(self._host, email[ 'account' ], email[ 'password' ], port)
         self._process_pending = False
         self._sendQueue = Queue()
 
@@ -85,12 +118,12 @@ class EmailManager(object):
 
     def checkRemain(self):
         if self._sendQueue.empty():
-            self.checkPending()
+            self._checkPending()
             return
         email = self._sendQueue.get()
         self.__send(email, commit=True)
 
-    def checkPending(self):
+    def _checkPending(self):
         if self._process_pending == True:
             return
         self._process_pending = True
@@ -101,43 +134,22 @@ class EmailManager(object):
         self._process_pending = False
 
     def __send(self, email: Email, commit = False):
+        """Do the action of sending email, 
+        ``commit`` set True to invoke db session commit.
+        """
         self.db.session.add(email)
         logger.debug("Geting email and ready to send it")
         if self._test:
             email.remark = "debugNotSend"
             logger.info("Email generated but not send: {}".format(email))
         else:
-            ms = MailSender(self._host, self._account, self._password, self._port)
-            ms.send(email)
+            self.sender.reset_server()
+            self.sender.send(email)
             email.remark = "sent"
             logger.debug("Email generated and send: {}".format(email))
+
         if commit:
             self.db.session.commit()
-
-class MailSender(object):
-    def __init__(self, host, account, password, port, *args, **kwargs):
-        self.host = host
-        self.account = account
-        self.password = password
-        self.port = port
-        self.server = smtplib.SMTP_SSL(self.host, self.port)
-        return super().__init__(*args, **kwargs)
-    
-    def send(self, email: Email):
-        msg = MIMEText(email.content, 'html', 'utf-8')
-        msg['Subject'] = Header(email.subject, 'utf-8').encode()
-        msg['From'] = self.__format_addr('SSPY-Mgr <{}>'.format(self.account))
-        msg['To'] = self.__format_addr('Receiver <{}>'.format(email.to) )
-        self.server.connect( self.host, self.port )
-        # self.server.starttls()
-        self.server.ehlo()
-        self.server.login( self.account, self.password)
-        self.server.sendmail( self.account, email.to, msg.as_string())
-        self.server.quit()
-
-    def __format_addr( self, s ):
-        name, addr = parseaddr(s)
-        return formataddr( ( Header(name, 'utf-8').encode(), addr ) )
 
 
 def registerApi(api):
@@ -154,7 +166,3 @@ def registerApi(api):
         emails = Email.query.paginate(page=page, per_page=per_page)
         return jsonify({'status': 'success', 'emails': emails})
     logger.info("Api registered")
-
-
-def init(app):
-    app.m_events.on("beforeRegisterApi", registerApi)

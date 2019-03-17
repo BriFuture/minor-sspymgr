@@ -3,12 +3,12 @@
 from sspymgr import DB, createLogger
 from sspymgr import getRandomCode, convertFlowToByte
 
-from flask import session
+from flask import session, request, jsonify
 from datetime import datetime, timedelta
 import hashlib
 
 logger = createLogger(
-    "plugin_user", stream=False, logger_prefix="[Plugin User]")
+    "core_user", stream=False, logger_prefix="[Plugin User]")
 
 
 class User(DB.Model):
@@ -28,6 +28,7 @@ class User(DB.Model):
     resetPasswordId = DB.Column(DB.String(255))
     resetPasswordTime = DB.Column(DB.DateTime)
 
+    Type_Active = "active"
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         # self.password = password
@@ -136,6 +137,9 @@ def getCurrentUser():
 
 
 def isManager(user=None):
+    """If user is set, check if user is manager;
+    Else check it by session
+    """
     if user is not None:
         return user.id == 1
     if 'userid' in session:
@@ -143,11 +147,13 @@ def isManager(user=None):
     return False
 
 
-def getSuperManager():
+def getSuperManager() -> User:
+    """Get the super manager.
+    """
     return User.query.filter_by(id=1).first()
 
 
-def user_signin(user):
+def _user_signin(user):
     """process user signin action, assume user is validated
     """
     session['user'] = user.email
@@ -155,8 +161,8 @@ def user_signin(user):
     user.lastLogin = datetime.now()
 
 
-def send_checkcode_email(emailaddr, emailManager):
-    """注册时获取验证码
+def _send_checkcode_email(emailaddr, emailManager):
+    """get check code when signup
     """
     rcode = getRandomCode()
     session['usercheckcode'] = rcode
@@ -168,8 +174,8 @@ def send_checkcode_email(emailaddr, emailManager):
         type="signup checkcode")
 
 
-def send_reset_link(host, email, code, emailManager):
-    """重置密码
+def _send_reset_link(host, email, code, emailManager):
+    """generate reset password link
     """
     link = host + '/vhome#/resetPassword/' + code
     # url_for( 'home.on_resetPasswdWithId', code = code)
@@ -181,25 +187,13 @@ def send_reset_link(host, email, code, emailManager):
         type="reset password")
 
 
-from flask import request, jsonify
-from sspymgr import Manager
-app = None
-
-
-def init(iapp: Manager):
-    global app
-    app = iapp
-    app.m_events.on('beforeRegisterApi', registerApi)
-    logger.debug("inited")
-
-
 MAX_CHECKCODE_ATTEMPT = 3
 CHECKCODE_TIMEOUT = timedelta(minutes=10)
 
+from sspymgr import isEmailMatched
 
-def registerApi(api):
-    from sspymgr import isEmailMatched
-    from web_settings import WebguiSetting
+def registerApi(api, app):
+    from . import WebguiSetting
 
     @api.route('/home/signin', methods=['POST'])
     def on_home_signin():
@@ -229,7 +223,7 @@ def registerApi(api):
 
         if user.isPasswordValid(password):
             # able to sign in
-            user_signin(user)
+            _user_signin(user)
             session.permanent = request.form.get(
                 'keep_signedin') == 'remember-me'
             resp['status'] = 'success'
@@ -279,13 +273,13 @@ def registerApi(api):
         session['checkcode_attempt'] += 1
 
         if session['checkcode_attempt'] <= MAX_CHECKCODE_ATTEMPT:
-            send_checkcode_email(email, app.m_emailManager)
+            _send_checkcode_email(email, app.m_emailManager)
         else:
             start = datetime.fromtimestamp(session['checkcode_start'])
             now = datetime.now()
             if now - start > CHECKCODE_TIMEOUT:
                 session['checkcode_attempt'] = 1
-                send_checkcode_email(email, app.m_emailManager)
+                _send_checkcode_email(email, app.m_emailManager)
             else:
                 resp['status'] = 'fail'
                 resp[
@@ -347,7 +341,7 @@ def registerApi(api):
             session.pop('usercheckcode')
             # auto signin
             resp['status'] = 'success'
-            user_signin(user)
+            _user_signin(user)
 
             app.m_db.session.commit()
         return jsonify(resp)
@@ -363,7 +357,7 @@ def registerApi(api):
         if user:
             user.request_reset_passwd()
             code = '%d_%s' % (user.id, user.resetPasswordId)
-            send_reset_link(request.host, email, code, app.m_emailManager)
+            _send_reset_link(request.host, email, code, app.m_emailManager)
             app.m_db.session.commit()
         else:
             state['status'] = 'fail'
@@ -435,4 +429,4 @@ def registerApi(api):
             'users': [u.to_dict() for u in users]
         })
 
-    logger.debug("api registered.")
+    logger.info("api registered.")

@@ -1,11 +1,9 @@
 # -*- coding:utf-8 -*-
-"""
-    sspymgr
-    website application for managing shadowsocks service 
+"""sspymgr: a website application for managing shadowsocks service 
 """
 
 __author__ = 'BriFuture'
-__version__ = '0.0.17'
+__version__ = '0.0.19'
 
 from .manager import Manager
 # models

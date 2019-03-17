@@ -3,7 +3,7 @@ from sspymgr import DB, createLogger
 from sqlalchemy.sql import text
 from base64 import b64decode
 
-logger = createLogger('plugin_settings', stream=False, logger_prefix="[Plugin Settings]")
+logger = createLogger('core_settings', stream=False, logger_prefix="[Plugin Settings]")
 
 db = None
 class WebguiSetting( DB.Model ):
@@ -82,16 +82,12 @@ def __init_webgui_setting(db):
     
     db.session.commit()
 
-def init(app):
-    app.m_events.on('beforeRegisterApi', registerApi)
+from flask import jsonify
+
+def registerApi(api, app):
     global db
     db = app.m_db
     __init_webgui_setting(db)
-    logger.debug("inited")
-
-from flask import jsonify
-
-def registerApi(api):
     # TODO change setting item
     @api.route_admin('/setting/getAll', methods=['POST'])
     def get_all_settings():
@@ -103,4 +99,4 @@ def registerApi(api):
             'status': 'success',
             'setting': settings
         })
-    logger.debug("api registered.")
+    logger.info("api registered.")

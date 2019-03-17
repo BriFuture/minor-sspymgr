@@ -57,6 +57,8 @@ def run_webserver():
     """
     global app
     app = Manager( __name__ )
+    from .core import init as core_init
+    core_init(app)
     app.start()
 
     from gevent import pywsgi

@@ -3,7 +3,6 @@ from sspymgr import DB, \
     createLogger, getRandomCode, formatTime
 
 logger = createLogger("plugin_order", stream=False, logger_prefix="[Plugin Order]")
-requirement = ['web_user']
 
 from datetime import datetime, timedelta
 from sqlalchemy.sql import text
@@ -163,12 +162,13 @@ def init_product_type():
 
 
 from flask import jsonify, session, request
+from sspymgr.core import getSuperManager, User, UserType
+
 app = None
 
 def user_confirm_order(user):
     """用户成功下单时通知管理员
     """
-    from web_user import getSuperManager
     admin = getSuperManager()
     content = "用户(id: {}, email: {}) 于 {} 成功下单，请确认。".format(
         user.id, user.email, datetime.now())
@@ -182,7 +182,6 @@ def user_confirm_order(user):
 from sspymgr.sscontroller import Account, AccountFlow
 
 def registerApi(api):
-    from web_user import User, UserType, getSuperManager
     @api.route_admin('/product/getAll', methods=['POST'])
     def get_admin_products():
         prodcuts = Product.query.all()
@@ -346,15 +345,18 @@ def registerApi(api):
 
         # order history
         Order.place_order(uid, product, comment=comment)
-
-        if app.m_sscontroller.renew_account(
-                flow, timedelta(seconds=product.duration), uid=uid):
-            user = User.query.filter_by(id=uid).first()
-            user.type = UserType.ACTIVE.value
-            user_confirm_order(user)
-            app.m_db.session.commit()
-        else:
+        account = app.m_sscontroller.get_account_by_uid(uid)
+        if account is None:
             state['status'] = 'fail'
+        else:
+            account.clear_flow()
+            account.totalFlow = flow
+            app.m_sscontroller.update_validity(account, seconds=product.duration, from_today=True)
+            user = User.query.filter_by(id=uid).first()
+            user.type = User.Type_Active
+            user_confirm_order(user)
+            
+        app.m_db.session.commit()
         return jsonify(state)
 
     @api.route_user('/orderHistory/get', methods=['GET', 'POST'])

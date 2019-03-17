@@ -48,10 +48,7 @@ def user_route(rule, methods):
 
 api.route_user = user_route
 
-def isManager():
-    if 'userid' in session:
-        return session.get('userid', -1) == 1
-    return False
+from . import isManager
 
 def identify_admin(func):
     @wraps(func)

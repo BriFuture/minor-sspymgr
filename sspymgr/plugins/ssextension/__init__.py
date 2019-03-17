@@ -27,13 +27,12 @@ def scheduleTasks(schedule):
     logger.debug("Tasks scheduled done")
 
 
-from .ssc_routes import availiable_port
-
+from sspymgr.core import WebguiSetting
+from sspymgr.sscontroller import availiable_port
 
 def afterSingup(params: dict):
     port = availiable_port(app.m_db)
     password = getRandomCode(8)
-    from web_settings import WebguiSetting
     days = WebguiSetting.getSetting(key='web_signup_trial_days',\
             default_value=1, default_type="Number").getTypedValue()
     expire = timedelta(days=days) + datetime.now()
