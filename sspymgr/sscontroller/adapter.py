@@ -171,7 +171,7 @@ class SSAdapter( object ):
             if( self._stat_count == self.MaxStatCount ):
                 # avoid long time not recved stats information
                 # logger.debug("SSServer not response for a long time")
-                self._stater(self.accounts)
+                self._process_stats({})
                 self._stat_count = 0
                 
         if rmsg is None:
@@ -180,10 +180,7 @@ class SSAdapter( object ):
         if isstat:
             stats = rmsg[5:]
             stats = json.loads( stats )
-            for key in stats:
-                account = self.accounts[ int( key ) ]
-                account.used_flow += stats[ key ]
-            self._stater(self.accounts)
+            self._process_stats(stats)
         else:
             if cmd is None:
                 logger.info("Recv unrecognized message: {}".format(rmsg))
@@ -211,8 +208,24 @@ class SSAdapter( object ):
         self.accounts[port] = account
         logger.info( 'port {} is added: {}'.format(account, add) )
 
-    def _process_stats(self):
-        pass
+    def _process_stats(self, stats):
+        dbaccounts = Account.query.all()
+        accountFlow = AccountFlow.query.all()
+        now = datetime.now()
+        for account in dbaccounts:
+            # attach accountFlow object to account
+            for flow in accountFlow:
+                if account.port == flow.port:
+                    account.account_flow = flow
+                    break
+            if str(account.port) in stats:
+                # TODO
+                account.used_flow = stats[ str(account.port) ]
+            else:
+                account.used_flow = 0
+            # account.used_flow = self.accounts[account.port].used_flow
+            self.accounts[account.port] = account
+        self._stater(self.accounts)
 
 
 from datetime import datetime, timedelta
@@ -233,7 +246,7 @@ class SSController(object):
         adapter._db = db
         adapter.conn_ser( server = ssAddr() )
         self._adapter = adapter
-        self._started = False
+        self._start()
 
     def _start(self):
         # append account to shadowsocks server
@@ -261,19 +274,8 @@ class SSController(object):
         if self._stats is not None:
             self._stats({port: account.used_flow for port, account in accounts.items()})
         now = datetime.now()
-        dbaccounts = Account.query.all()
-        accountFlow = AccountFlow.query.all()
-        now = datetime.now()
-        for account in dbaccounts:
-            # attach accountFlow object to account
-            for flow in accountFlow:
-                if account.port == flow.port:
-                    account.account_flow = flow
-                    break
-        
+        for port, account in accounts.items():
             # iterate all accounts stored in database records
-            raw_account = accounts[account.port]
-            account.used_flow = raw_account.used_flow
             if account.status in SSAdapter.ValidStates and account.used_flow != 0:
                 account.account_flow.updateTime = datetime.now()
                 account.account_flow.flow += account.used_flow
@@ -435,9 +437,6 @@ class SSController(object):
     def execute(self):
         """send command and recieve message
         """
-        if not self._started:
-            self._start()
-            self._started = True
         self._adapter.execute()
 
     def list_account(self, atype='all'):

@@ -3,7 +3,7 @@
 """
 
 __author__ = 'BriFuture'
-__version__ = '0.0.19'
+__version__ = '0.0.20'
 
 from .manager import Manager
 # models
