@@ -3,17 +3,39 @@
 """Description: Used for control shadowsocks, for example: add account, del account, flow usage stats.
 The method ``start_shadowsocks`` integrates shadowsocks into sspymgr and it will start a shadowsocks server
 in a separate thread. ``ssAddr`` can be used to make sure that shadowsocks server and adapter communicate 
-with the same address, either unix socks, either socket.
+with the same address, either unix socks file, either socket.
+
+Author: BriFuture
+
+Date: 2019/03/19
 """
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
+
+from sspymgr import convertFlowToByte, getRandomCode, Manager, createLogger
+from sspymgr.core import User, WebguiSetting, UserType
+logger = createLogger('sscontroller', stream=False, logger_prefix="[Core SSController]")
 
 from .database import Account, AccountFlow
 from .adapter import SSController
-from .utils import ssAddr, logger
+
+import sys
+def ssAddr(addr2str = False):
+    """Get universal address for communicating with shadowsocks server
+    """
+    if sys.platform.startswith( 'linux' ):
+        mgr_addr = '/var/run/sspymgr.sock'
+    else:
+        mgr_addr = ('127.0.0.1', 6001)
+
+    # some problem in unix sock file, using tcp mode always currently
+    mgr_addr = ('127.0.0.1', 6001)
+
+    if addr2str:
+        mgr_addr = '{}:{}'.format( mgr_addr[0], mgr_addr[1])
+    return mgr_addr
+
 from .run_ss import main as start_shadowsocks
-from sspymgr import convertFlowToByte, getRandomCode, Manager
-from sspymgr.core import User, WebguiSetting, UserType
 
 app = None
 def init(iapp: Manager):

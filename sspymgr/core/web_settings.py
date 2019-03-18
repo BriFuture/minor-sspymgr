@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+"""Description: This module stores the settings of webserver provided by sspymgr into database.
+The original purpose of this module is to store as much information as possible into a single table, 
+But it is proved that it's much better to store settings with simple and enumerable types, such as
+String and Number (most common). It will take some time to review this module and make some improvements.
+
+Author: BriFuture
+
+Date: 2019/03/18 21:42
+"""
 from sspymgr import DB, createLogger
 from sqlalchemy.sql import text
 from base64 import b64decode
@@ -7,7 +16,7 @@ logger = createLogger('core_settings', stream=False, logger_prefix="[Plugin Sett
 
 db = None
 class WebguiSetting( DB.Model ):
-    """
+    """ TODO reconstruct this model
     Type (can be ignored, just used as utility):
         String: Value type by default, should be processed by other logic
         Image: Value are encoded with base64 format
@@ -64,23 +73,26 @@ def __init_webgui_setting(db):
     signup_email_limit: int  default 2
     shadowsock_port_range_start: Number default '50000'
     """
-    sql = 'SELECT count(*) FROM %s' % WebguiSetting.__tablename__
-    res = db.engine.execute( text( sql ) ).first()
-    if res[ 0 ] != 0:
-        return
-    settings = [
-        ( "alipay_enabled",    "0", "Boolean" ),
-        ( "wechatpay_enabled", "0", "Boolean" ),
-        ( "signup_enabled", "1", "Boolean" ),
-        ( "signup_without_invitation", "8", "Number" ),
-        ( "signup_email_limit", "2", "Number" ),
-        ( "shadowsock_port_range_start", "45000", "Number" ),
-    ]
-    for setting in settings:
-        wgs = WebguiSetting( key = setting[0], value = setting[1], type = setting[2] )
-        db.session.add( wgs )
-    
-    db.session.commit()
+    try:
+        sql = 'SELECT count(*) FROM %s' % WebguiSetting.__tablename__
+        res = db.engine.execute( text( sql ) ).first()
+        if res[ 0 ] != 0:
+            return
+        settings = [
+            ( "alipay_enabled",    "0", "Boolean" ),
+            ( "wechatpay_enabled", "0", "Boolean" ),
+            ( "signup_enabled", "1", "Boolean" ),
+            ( "signup_without_invitation", "8", "Number" ),
+            ( "signup_email_limit", "2", "Number" ),
+            ( "shadowsock_port_range_start", "45000", "Number" ),
+        ]
+        for setting in settings:
+            wgs = WebguiSetting( key = setting[0], value = setting[1], type = setting[2] )
+            db.session.add( wgs )
+        
+        db.session.commit()
+    except Exception:
+        pass
 
 from flask import jsonify
 

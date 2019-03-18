@@ -4,6 +4,8 @@ It's written a bit earlier as this project builds. I only know ``os.path`` to ge
 all path at that time, but as I learned more knowledge of python, I think it will
 be better if they are replaced with pathlib.Path and it will be more readable. 
 
+TODO rewrite/simplify this module, use pathlib instead of os.path for better readability.
+
 Author: BriFuture
 
 Modified: 2019/03/10 19:57

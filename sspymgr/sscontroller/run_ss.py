@@ -1,10 +1,27 @@
+# -*- coding: utf-8 -*-
+"""Description: This module is used for integrating shadowsocks in sspymgr, it defines the configuration file
+that shadowsocks server should read when it starts. It also provides a very convenient way to start shadowsocks
+server in a seperated thread without effecting the webserver of sspymgr. If only the shadowsocks server should 
+be launched, invoke the ``main`` functin with wait keyword to be True in case the main thread finishes and then
+the single thread with shadowsocks server running within it ends up. Please note: the output of the shadowsocks
+server is redirected to a LOG file whose name is 'shadowsocks.log', placed under Universal Log Dir For sspymgr.
+
+Author: BriFuture
+
+Date: 2019/03/19
+"""
 import sys, os
 
+from sspymgr import tr
 from sspymgr.path_helper import createLoggerFile, DATA_DIR
 from sspymgr.sscontroller import ssAddr
 
-def ssConfigFile():
-    config = DATA_DIR + '/server-multi-passwd.json'
+_config_file = '/server-multi-passwd.json'
+def ssConfigFile(filename = '/server-multi-passwd.json'):
+    """Get the configuration file for shadowsocks server, 
+    TODO  able to change the config file when command-line options specified
+    """
+    config = DATA_DIR + filename
     if( not os.path.exists( config ) ):
         
         DEFAULT_CONFIG = """{
@@ -20,19 +37,25 @@ def ssConfigFile():
     return config
 
 
-def runSS():
+def _runSS():
+    """Deprecated, the launch process of shadowsocks server needs some configuration on the arguments option 
+    which would modify ``sys.argv``, so it may contain potential problem if the sspymgr is started with some
+    options.
+
+    At the very begging of this project when there is no logger and command-line argument options for sspymgr,
+    this method works fine, but as the project gets completed, this simple way to start shadowsocks server is
+    no longer satisfied with the demands. 
+    """
     mgr_addr = ssAddr(True)
     args = '--manager-address %s -c %s' % ( mgr_addr, ssConfigFile() )
-    print(sys.argv)
     sys.argv[1:] = args.split( ' ' )   
-    # import logging
-    # logging.basicConfig(level=logging.INFO,
-    #     format='%(asctime)s %(levelname)-8s %(message)s',
-    #     datefmt='%Y-%m-%d %H:%M:%S')
     from shadowsocks import server
     server.main()
 
 def new_runSS():
+    """An effective way to start shadowsocks server with all the outputs of it redirected into a log file
+    named `shadowsocks.log` under `~/.sspy-mgr/logs`.
+    """
     import logging
     fileHandler = createLoggerFile('shadowsocks')
     logger = logging.getLogger()
@@ -47,13 +70,12 @@ def new_runSS():
         datefmt='%Y-%m-%d %H:%M:%S')
 
     config_path = ssConfigFile()
-    logger.info('loading config from %s' % config_path)
+    logger.info(tr('Loading configuration from {}').format(config_path))
     with open(config_path, 'rb') as f:
         try:
             config = shell.parse_json_in_str(f.read().decode('utf8'))
         except ValueError as e:
-            logger.error('found an error in config.json: %s',
-                            e.message)
+            logger.error("found an error in config.json: {}".format(e.message))
             sys.exit(1)
     config['manager_address'] = ssAddr(True)
     config['port_password'] = {}
@@ -75,11 +97,13 @@ def new_runSS():
     manager.run(config)
 
 def main(wait=False):
-    """set wait to true, the main process will wait shadowsocks process finished,
-    it might be useful when webserver does not start
+    """Set wait to true, the main process will wait shadowsocks process finished,
+    it might be useful when webserver does not start.
     """
-    # import logging
-    # log = logging.getLogger( 'Test' )
+    ## The reason why Popen is not used is that the python interpreter should be specified to start the 
+    ## sockserver. On some machines which contains both python2.x and python3.x, and python is linked to
+    ## python2, that may cause some conflicts, so it's better to run the shadowsocks server in the sub
+    ## Process and if sspymgr is launched normally, the sub process should be launched too if no error occurs.
     # import sys
     # from subprocess import Popen
     # with open( 'logfile.txt', 'ab' ) as file:
@@ -95,4 +119,4 @@ def main(wait=False):
     sleep( 1 )
 
 if __name__ == '__main__':
-    startSS()
+    new_runSS()

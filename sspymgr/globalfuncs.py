@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+"""Description: Provide general functions that may be used in other sub modules. Note: Most functions are made
+for convert bytes flow or time, most of them may seem not so useful because the rendering process now moved 
+into client side and the Frontend HTML UI is now driven by VUE. 
+
+## TODO clear those functions that are no longer used, integrated path_helper with this module because they do
+the similar things.
+
+Author: BriFuture
+
+Date: 2019/03/19 23:07
+"""
 import hashlib, random, string
 code_lib = string.ascii_letters + string.digits
 
@@ -85,3 +97,5 @@ def initGettext(domain="sspymgr") -> gettext.gettext:
     gettext.textdomain(domain)
     gettext.find(domain, "locale", languages=["zh_CN", "en_US"])
     return gettext.gettext
+
+tr = initGettext()

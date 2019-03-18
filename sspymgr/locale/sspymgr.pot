@@ -1,0 +1,106 @@
+# Translations template for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-03-18 22:20+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: sspymgr/_plugin.py:98
+msgid "Starting filtering plugins..."
+msgstr ""
+
+#: sspymgr/_plugin.py:116
+msgid "Importing dependless plugin: {}"
+msgstr ""
+
+#: sspymgr/_plugin.py:125
+msgid "Importing depend plugin: {}"
+msgstr ""
+
+#: sspymgr/_plugin.py:130
+msgid ""
+"Plugins is filtered, count of plugins that dont rely on others: {}, count"
+" of plugins that rely on others: {}"
+msgstr ""
+
+#: sspymgr/_plugin.py:134
+msgid "Preparing to initialize plugins..."
+msgstr ""
+
+#: sspymgr/_plugin.py:141
+msgid "Initialization completed, {} plugins has been loaded"
+msgstr ""
+
+#: sspymgr/_plugin.py:149
+msgid "Init plugin: {}"
+msgstr ""
+
+#: sspymgr/configuration.py:58
+msgid "Run SSPYMGR. Support Python3.x only."
+msgstr ""
+
+#: sspymgr/configuration.py:96
+msgid "Logger output will send to stdout."
+msgstr ""
+
+#: sspymgr/configuration.py:98
+msgid ""
+"Specify configuration file (absolute path), sspymgr will create a new "
+"database file whose name is the same as the configuration file,"
+"                 for example, -c ~/.sspy-mgr/local.yaml will create a "
+"database named ~/.sspy-mgr/local.db"
+msgstr ""
+
+#: sspymgr/configuration.py:102
+msgid ""
+"Set IP address that web werver listens,             for example 0.0.0.0 "
+"for IPv4, :: for IPv6"
+msgstr ""
+
+#: sspymgr/configuration.py:104
+msgid "Set port that Website listens, usually 80"
+msgstr ""
+
+#: sspymgr/configuration.py:106
+msgid "integrated shadowsocks opration"
+msgstr ""
+
+#: sspymgr/configuration.py:107
+msgid ""
+"Enable backend shadowsocks server,            disable it when developing "
+"the program may be helpful"
+msgstr ""
+
+#: sspymgr/configuration.py:110
+msgid ""
+"Only start backend shadowsocks server             with defined "
+"communication method (socket or unix sock file) "
+msgstr ""
+
+#: sspymgr/core/web_user.py:191
+msgid ""
+"Hello. Your checkcode in SSPY-MGR is:\n"
+" {}"
+msgstr ""
+
+#: sspymgr/core/web_user.py:205
+msgid ""
+"Hi, you request to reset your password at SSPY-MGR.\n"
+"    Here your reset password link for SSPY-MGR is: {}, please reset your "
+"password within 3 days.\n"
+"    If you never request to reset password, please ignore this email.\n"
+"    "
+msgstr ""
+

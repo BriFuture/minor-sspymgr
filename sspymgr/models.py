@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """Description: There are two main purpose of this module:
 1. provide sqlalchemy as DB to other sub modules so they can define 
 their database models even the database instance is not created yet.

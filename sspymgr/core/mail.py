@@ -103,7 +103,21 @@ class EmailManager(object):
         self._process_pending = False
         self._sendQueue = Queue()
 
-    def add_email(self, to, subject = None, content = None, type = None ):
+    def add_email(self, to, subject, content, type = None ):
+        """append an email object to queue, the mail will be sent at proper time,
+        Empty subject or content is not allowed.
+        """
+        # it may be better if the email pattern is checked
+        if len(to) == 0:
+            logger.warning("Remote address not set in an email")
+            return
+        if len(subject) == 0:
+            logger.warning("Empty subject found in an email")
+            return
+        if len(content) == 0:
+            logger.warning("Empty content found in an email")
+            return
+
         email = Email(
             to=to,
             subject=subject,
@@ -117,6 +131,8 @@ class EmailManager(object):
         self._sendQueue.put(email)
 
     def checkRemain(self):
+        """Check it if there exists any pending emails that need to be sent
+        """
         if self._sendQueue.empty():
             self._checkPending()
             return

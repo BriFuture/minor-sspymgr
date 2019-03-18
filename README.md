@@ -36,6 +36,8 @@ You may find some useful instructions in [addition.doc](./docs/addition.md). Or 
 - other
     * optional: data migration and database upgrade
     * plugin system optimize, all helper instances should be attached to app instance
+- translating
+    * now all text within python code uses English default, they are translated in Chinese but no methods provided to change Language Setting which would be necessary if the system Language is not Chinese while the manager want to use Chinese to display INFORMATION.
 
 ## Thanks To Following Projects
 

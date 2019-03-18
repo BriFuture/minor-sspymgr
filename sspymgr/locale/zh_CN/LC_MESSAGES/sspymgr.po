@@ -1,0 +1,107 @@
+# Chinese (Simplified, China) translations for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-03-18 22:20+0800\n"
+"PO-Revision-Date: 2019-03-18 22:23+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_Hans_CN\n"
+"Language-Team: zh_Hans_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: sspymgr/_plugin.py:98
+msgid "Starting filtering plugins..."
+msgstr "开始过滤插件..."
+
+#: sspymgr/_plugin.py:116
+msgid "Importing dependless plugin: {}"
+msgstr "导入无依赖的插件：{}"
+
+#: sspymgr/_plugin.py:125
+msgid "Importing depend plugin: {}"
+msgstr "导入有依赖的插件：{}"
+
+#: sspymgr/_plugin.py:130
+msgid ""
+"Plugins is filtered, count of plugins that dont rely on others: {}, count"
+" of plugins that rely on others: {}"
+msgstr "插件过滤完毕，不依赖其他插件的数量为：{},依赖其他插件的数量为"
+
+#: sspymgr/_plugin.py:134
+msgid "Preparing to initialize plugins..."
+msgstr "准备初始化插件"
+
+#: sspymgr/_plugin.py:141
+msgid "Initialization completed, {} plugins has been loaded"
+msgstr "插件过滤完成，加载了 {} 个插件"
+
+#: sspymgr/_plugin.py:149
+msgid "Init plugin: {}"
+msgstr "初始化插件：{}"
+
+#: sspymgr/configuration.py:58
+msgid "Run SSPYMGR. Support Python3.x only."
+msgstr "运行 SSPYMGR。仅支持 Python3.x。"
+
+#: sspymgr/configuration.py:96
+msgid "Logger output will send to stdout."
+msgstr "Logger 日志输出会打印到 stdout（标准输出）。"
+
+#: sspymgr/configuration.py:98
+msgid ""
+"Specify configuration file (absolute path), sspymgr will create a new "
+"database file whose name is the same as the configuration file,"
+"                 for example, -c ~/.sspy-mgr/local.yaml will create a "
+"database named ~/.sspy-mgr/local.db"
+msgstr ""
+
+#: sspymgr/configuration.py:102
+msgid ""
+"Set IP address that web werver listens,             for example 0.0.0.0 "
+"for IPv4, :: for IPv6"
+msgstr "设置 web 服务器监听的 IP 地址，对于 IPv4 是 0.0.0.0，对于 IPv6 ::"
+
+#: sspymgr/configuration.py:104
+msgid "Set port that Website listens, usually 80"
+msgstr "设置 web 服务器监听的端口号，通常是 80"
+
+#: sspymgr/configuration.py:106
+msgid "integrated shadowsocks opration"
+msgstr "集成的 shadowsocks 操作"
+
+#: sspymgr/configuration.py:107
+msgid ""
+"Enable backend shadowsocks server,            disable it when developing "
+"the program may be helpful"
+msgstr ""
+
+#: sspymgr/configuration.py:110
+msgid ""
+"Only start backend shadowsocks server             with defined "
+"communication method (socket or unix sock file) "
+msgstr ""
+
+#: sspymgr/core/web_user.py:191
+msgid ""
+"Hello. Your checkcode in SSPY-MGR is:\n"
+" {}"
+msgstr "你好，你在 SSPY-MGR 上的验证码是：\n{}"
+
+#: sspymgr/core/web_user.py:205
+msgid ""
+"Hi, you request to reset your password at SSPY-MGR.\n"
+"    Here your reset password link for SSPY-MGR is: {}, please reset your "
+"password within 3 days.\n"
+"    If you never request to reset password, please ignore this email.\n"
+"    "
+msgstr "你好，你最近在 SSPY-MGR 上请求重置密码,。\n你的重置密码的链接为: {}，请在 3 天内使用此链接重置你的密码。\n如果你并没有请求过重置密码，请忽略掉本邮件。"
+

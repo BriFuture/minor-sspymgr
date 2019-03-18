@@ -12,7 +12,7 @@ basedir = os.path.abspath( os.path.dirname( __file__) )
 import yaml
 from pathlib import Path
 from .path_helper import CONFIG_PATH
-from gettext import gettext as tr
+from .globalfuncs import tr
 
 class Configuration:
     """This class is used for integrate configuration file reading/writing and command line arguments parsing.
@@ -104,10 +104,10 @@ class Configuration:
         webgroup.add_argument("--webport", help=tr("Set port that Website listens, usually 80"), nargs="?")
 
         ssgroup = parser.add_argument_group('shadowsocks', tr('integrated shadowsocks opration'))
-        ssgroup.add_argument("--disable_ss", help=tr("Enable backend shadowsocks server,\
+        ssgroup.add_argument("--disable-ss", help=tr("Enable backend shadowsocks server,\
             disable it when developing the program may be helpful"), 
             action="store_true")
-        ssgroup.add_argument("--only_ss", help=tr("Only start backend shadowsocks server \
+        ssgroup.add_argument("--only-ss", help=tr("Only start backend shadowsocks server \
             with defined communication method (socket or unix sock file) "), 
             action="store_true")
 

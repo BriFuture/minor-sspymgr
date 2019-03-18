@@ -8,8 +8,8 @@ Author: BriFuture
 Detail: 2019/03/17 12:31
 """
 
-DEFAULT_METHOD = "aes-256-cfb"
-from .utils import logger
+from sspymgr import createLogger
+logger = createLogger('sscontroller')
 
 def _ping():
     """Return a tuple that is made up of a message that need to be sent to shadowsocks server 
@@ -219,7 +219,7 @@ class SSAdapter( object ):
                     account.account_flow = flow
                     break
             if str(account.port) in stats:
-                # TODO
+                
                 account.used_flow = stats[ str(account.port) ]
             else:
                 account.used_flow = 0
@@ -231,6 +231,7 @@ class SSAdapter( object ):
 from datetime import datetime, timedelta
 
 GB = 1024 * 1024 *1024 # unit: bytes
+DEFAULT_METHOD = "aes-256-cfb"
 
 class SSController(object):
     """Provide advanced api for manipulating shadowsocks server.
@@ -241,7 +242,7 @@ class SSController(object):
         """
         self._db = db
         self._stats = None
-        from .utils import ssAddr
+        from . import ssAddr
         adapter = SSAdapter( self.process_stats )
         adapter._db = db
         adapter.conn_ser( server = ssAddr() )
@@ -309,11 +310,11 @@ class SSController(object):
             expire=kwargs.get("expire"),
             method = kwargs.get("method", DEFAULT_METHOD)
         )
+        now = datetime.now()
         flow = AccountFlow(port=port, updateTime=now, checkTime=now, 
             autoBanTime = kwargs.get("expire"))
         account.account_flow = flow
         self._adapter.add_port(account)
-        now = datetime.now()
 
         self._db.session.add(account)
         self._db.session.add(flow)

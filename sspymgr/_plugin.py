@@ -7,6 +7,8 @@ it will work fine. But if your python version is higher than 3.6, for example, 3
 it may not load plugins as expected, for that case, you should manually annotate the 
 code under ``load_plugins`` function.
 
+TODO: simplify the plugin loader
+
 Author: BriFuture
 
 Modified: 2019/03/10 20:14

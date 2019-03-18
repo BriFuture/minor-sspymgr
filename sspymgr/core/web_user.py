@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+"""Description: This module may be the most significant part of the webserver. It contains many sub systems
+such as Signin, Singup and Administrator management. At the very begging of this project, Chiness and English
+annotations or text are mixed in many parts, so one of the jobs TODO is to rewrite all of them in English 
+and then use ``gettext`` module to translate them into Chinses.
+
+Author: BriFuture
+
+Date: 2019/03/18 21:51
+"""
 
 from sspymgr import DB, createLogger
 from sspymgr import getRandomCode, convertFlowToByte
@@ -12,6 +21,9 @@ logger = createLogger(
 
 
 class User(DB.Model):
+    """The life cycle of an webserver user is not clear now. So the user type may be
+    confusing. TODO reconstruct this model
+    """
     __tablename__ = 'user'
     id = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     type = DB.Column(DB.String(255))
@@ -28,7 +40,13 @@ class User(DB.Model):
     resetPasswordId = DB.Column(DB.String(255))
     resetPasswordTime = DB.Column(DB.DateTime)
 
-    Type_Active = "active"
+    TypeTrial  = 'trial'
+    TypeActive = "active"
+    TypeBanned = 'banned'
+    TypeInvalid = 'invalid'
+    TypeNotified = 'notified'
+    TypeDefault = 'default'
+    TypeTest = 'test'
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         # self.password = password
@@ -40,8 +58,7 @@ class User(DB.Model):
         return '<User %s %s %s>' % (self.email, self.salt, self.password)
 
     def __gen_passwd(self, password):
-        """
-        Just generate secure password, but not modify object's password attribute,
+        """Just generate secure password, but not modify object's password attribute,
         parameter password can't be None or self.password, otherwise the method 
         which checks whether password is valid will return a Fake result
         """
@@ -50,8 +67,9 @@ class User(DB.Model):
     def updatePassword(self, new_passwd):
         self.password = self.__gen_passwd(new_passwd)
 
-    def isPasswordValid(self, password):
-        """判断用户密码是否正确 
+    def is_password_valid(self, password):
+        """check whether the password (will be encrypted) passed in is the same 
+        as the encrypted password stored in the database records
         """
         password = str(password)
         password = self.__gen_passwd(password)
@@ -111,7 +129,7 @@ class Group(DB.Model):
 
 from enum import Enum, unique
 
-
+# TODO create a clear life cycle for ``User`` and records it into a table
 @unique
 class UserType(Enum):
     BANNED = 'banned'
@@ -127,16 +145,19 @@ class UserType(Enum):
 #     __tablename__ = 'UserStatus'
 #     userId = DB.Column(DB.Integer, nullable=False)
 #     webStatus = DB.Column(DB.String(64), default=UserType.DEFAULT.value)
+#     emailStatus = DB.Column(DB.String(64))
 #     ssStatus = DB.Column(DB.String(64))
 
 
-def getCurrentUser():
+def getCurrentUser() -> User:
+    """Get currently logged in user data object
+    """
     uid = session.get('userid')
     user = User.query.filter_by(id=uid).first()
     return user
 
 
-def isManager(user=None):
+def isManager(user=None) -> bool:
     """If user is set, check if user is manager;
     Else check it by session
     """
@@ -160,13 +181,14 @@ def _user_signin(user):
     session['userid'] = user.id
     user.lastLogin = datetime.now()
 
-
+from sspymgr import tr
 def _send_checkcode_email(emailaddr, emailManager):
     """get check code when signup
     """
     rcode = getRandomCode()
     session['usercheckcode'] = rcode
-    content = '你好，注册验证码为: %s' % rcode
+    # 你好，你在 SSPY-MGR 中的注册验证码为:
+    content = tr('Hello. Your checkcode in SSPY-MGR is:\n {}').format(rcode)
     emailManager.add_email(
         to=emailaddr,
         subject='SSPY SignUp',
@@ -179,7 +201,11 @@ def _send_reset_link(host, email, code, emailManager):
     """
     link = host + '/vhome#/resetPassword/' + code
     # url_for( 'home.on_resetPasswdWithId', code = code)
-    content = 'Hi, 重置密码的链接为: %s，请在时限内重置你的密码' % link
+    
+    content = tr("""Hi, you request to reset your password at SSPY-MGR.
+    Here your reset password link for SSPY-MGR is: {}, please reset your password within 3 days.
+    If you never request to reset password, please ignore this email.
+    """).format(link)
     emailManager.add_email(
         to=email,
         subject="SSPY Reset Password Link",
@@ -221,7 +247,7 @@ def registerApi(api, app):
             resp['email'] = 'Email is not valid'
             return jsonify(resp)
 
-        if user.isPasswordValid(password):
+        if user.is_password_valid(password):
             # able to sign in
             _user_signin(user)
             session.permanent = request.form.get(
@@ -400,7 +426,7 @@ def registerApi(api, app):
         uid = session.get('userid')
         user = User.query.filter_by(id=uid).first()
         oldp = request.form.get('oldPassword')
-        if user is None or not user.isPasswordValid(oldp):
+        if user is None or not user.is_password_valid(oldp):
             return jsonify('fail')
         newp = request.form.get('newPassword')
         user.updatePassword(newp)

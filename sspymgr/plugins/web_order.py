@@ -353,7 +353,7 @@ def registerApi(api):
             account.totalFlow = flow
             app.m_sscontroller.update_validity(account, seconds=product.duration, from_today=True)
             user = User.query.filter_by(id=uid).first()
-            user.type = User.Type_Active
+            user.type = User.TypeActive
             user_confirm_order(user)
             
         app.m_db.session.commit()

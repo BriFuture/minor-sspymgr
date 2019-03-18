@@ -49,9 +49,6 @@ class Manager(Flask):
     def start(self):
         """make everythin prepared and then run the manager
         """
-        from .sscontroller import init as init_ss
-        init_ss(self)
-
         self.m_events.on("task_schedule", self.scheduleTasks)
         load_plugins(self)
         
@@ -59,6 +56,9 @@ class Manager(Flask):
         self.m_events.trigger('beforeCreateDb', eventArgs = self.m_db)
         self.m_db.create_all()
         self.m_events.trigger('afterCreateDb', eventArgs = self.m_db)
+        
+        from .sscontroller import init as init_ss
+        init_ss(self)
         
         self._init_routes()
         self.m_tasker.start()
